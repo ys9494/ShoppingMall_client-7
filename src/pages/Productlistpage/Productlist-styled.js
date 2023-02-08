@@ -6,6 +6,7 @@ export const ProductlistWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+
   h1 //제목
   {
     font-size: 50px;
@@ -39,7 +40,7 @@ export const ProductlistItems = styled.li`
     align-items: center;
   }
   button {
-    background-color: black;
+    background-color: white;
     color: white;
     margin-left: 5px;
     font-size: 15px;
@@ -49,4 +50,20 @@ export const ProductlistItems = styled.li`
     background-color: white;
     color: black;
   }
+`;
+
+export const EditButton = styled.button`
+  background-color: white;
+  color: white;
+  margin-left: 5px;
+  font-size: 15px;
+  padding: 5px 10px;
+`;
+
+export const DeleteButton = styled.button`
+  background-color: white;
+  color: white;
+  margin-left: 5px;
+  font-size: 15px;
+  padding: 5px 10px;
 `;

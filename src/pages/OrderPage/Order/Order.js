@@ -1,7 +1,15 @@
 import React from 'react';
 import { OrderInfo, OrderWrapper, PayInfo } from "./styled";
-
+import { useLocation } from 'react-router-dom';
 const Order = () => {
+  // total,
+  // price,
+  // count,
+
+  const location = useLocation();
+
+  const { total, price, count } = location.state;
+
 
   return (
     <>
@@ -40,10 +48,10 @@ const Order = () => {
               <p>결제정보</p>
               <ul>
                 <li>주문 상품</li>
-                <li>상품 금액</li>
+                <li>  1`상품 금액{price}</li>
                 <li>배송비</li>
               </ul>
-              <p>총 결제금액</p>
+              <p>총 결제금액{total}</p>
             </div>
             <button>쇼핑백 비우기</button>
             <button>주문 하기</button>

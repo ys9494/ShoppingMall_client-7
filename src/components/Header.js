@@ -1,15 +1,11 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import {
-  HeaderContainer,
-  LogoBox,
-  HeaderNav,
-  LinkStyle,
-} from "./header-styled";
-import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartShopping, faUser } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import {
+  HeaderContainer, HeaderNav,
+  LinkStyle, LogoBox
+} from "./header-styled";
 
 const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);

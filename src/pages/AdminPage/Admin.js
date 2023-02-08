@@ -8,26 +8,26 @@ const Admin = () => {
       <AdminWrapper>
         <div>
           <AdminNav>
-            <Link to="../../" style={{ textDecoration: "none" }}>
-              ORDER MANAGE
+            <Link to="../../orderlist" style={{ textDecoration: "none" }}>
+              주문 관리
             </Link>
           </AdminNav>
 
           <AdminNav>
-            <Link to="../category" style={{ textDecoration: "none" }}>
-              CATEGORY MANAGE
+            <Link to="/admin/categorymanage" style={{ textDecoration: "none" }}>
+              카테고리 관리
             </Link>
           </AdminNav>
 
           <AdminNav>
             <Link to="../../productlist" style={{ textDecoration: "none" }}>
-              PRODUCT LIST
+              상품 내역
             </Link>
           </AdminNav>
 
           <AdminNav>
             <Link to="../../productadd" style={{ textDecoration: "none" }}>
-              PRODUCT ADD
+              상품 추가
             </Link>
           </AdminNav>
         </div>

@@ -18,9 +18,7 @@ const Product = ({ cart, setCart }) => {
       setProduct(
         data.data.find((product) => product._id === (id))
       );
-      if (!localStorage.getItem("cart")) {
-        localStorage.setItem("cart", "[]");
-      }
+
     });
   }, [id]);
 
@@ -67,19 +65,25 @@ const Product = ({ cart, setCart }) => {
       price: product.price,
       manufacturer: product.manufacturer,
       quantity: count,
+
+
     };
+
 
     // found가 있으면 중복된 물건
     const found = cart.find((el) => el._id === cartItem._id);
+
     // found.quantity+ count는 기존 db의 수량과 장바구니 클릭을 통해 추가된 수량
     if (found) setQuantity(cartItem._id, found.quantity + count);
-    else setCart([...cart, cartItem]);
+    else {
+      setCart([...cart, cartItem]);
+      localStorage.setItem("cart", JSON.stringify([...cart, cartItem]))
+    }
     //기존 카트는 유지하고 카트 item 추가
 
-    localStorage.setItem("cart", JSON.stringify(cart))
     console.log(cart)
   }
-  
+
   const size = { type: "size", option: ["small", "medium", "large", "xlarge", "xxlarge"] };
 
   return (

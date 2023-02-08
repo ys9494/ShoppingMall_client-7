@@ -20,6 +20,7 @@ const CartItem = (item) => {
           <button>+</button>
         </div>
       </div>
+
       <p>DELETE</p>
     </li>
   )
