@@ -32,6 +32,11 @@ export const HeaderNav = styled.div`
 `;
 
 export const LinkStyle = styled(Link)`
-  color: #000;
+  color: #777;
   text-decoration: none;
+  transition: all 0.3s;
+
+  &:hover {
+    color: #000;
+  }
 `

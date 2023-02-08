@@ -1,5 +1,6 @@
 import React from "react";
 import { AdminWrapper, AdminNav } from "./Admin-styled";
+import { Link } from "react-router-dom";
 
 const Admin = () => {
   return (
@@ -7,19 +8,27 @@ const Admin = () => {
       <AdminWrapper>
         <div>
           <AdminNav>
-            <button>주문 관리</button>
+            <Link to="../../" style={{ textDecoration: "none" }}>
+              ORDER MANAGE
+            </Link>
           </AdminNav>
 
           <AdminNav>
-            <button>카테고리 관리</button>
+            <Link to="../category" style={{ textDecoration: "none" }}>
+              CATEGORY MANAGE
+            </Link>
           </AdminNav>
 
           <AdminNav>
-            <button>제품 내역</button>
+            <Link to="../../productlist" style={{ textDecoration: "none" }}>
+              PRODUCT LIST
+            </Link>
           </AdminNav>
 
           <AdminNav>
-            <button>상품 추가</button>
+            <Link to="../../productadd" style={{ textDecoration: "none" }}>
+              PRODUCT ADD
+            </Link>
           </AdminNav>
         </div>
       </AdminWrapper>

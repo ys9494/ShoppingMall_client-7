@@ -1,35 +1,27 @@
 import React from "react";
-import {OptionBox, RadioBox, RadioWrapper} from "./radio-styled";
+import {RadioLabel, RadioWrapper} from "./radio-styled";
 
 const Select = ({options}) => {
   const type = options.type;
   const option = options.option;
 
   return (
-    // <SelectBox>
-    //   <option>SIZE SELECT</option>
-    //   {
-    //     options.map((option, idx) => {
-    //       return (
-    //         <OptionBox key={idx} value={option}>
-    //           {option.toUpperCase()}
-    //         </OptionBox>
-    //       )
-    //     })
-    //   }
-    // </SelectBox>
     <>
       <RadioWrapper>
+        <ul>
         {
           option.map((item, idx) => {
             return (
-              <RadioBox key={idx}>
-                <input type="radio" name={type} value={item} checked />
-                <span>{item.toUpperCase()}</span>
-              </RadioBox>
+              <li key={idx}>
+                <input type="radio" id={`type-${idx}`} name={type} value={item} />
+                <RadioLabel htmlFor={`type-${idx}`}>
+                  <span>{item.toUpperCase()}</span>
+                </RadioLabel>
+              </li>
             )
           })
         }
+        </ul>
       </RadioWrapper>
       
     </>

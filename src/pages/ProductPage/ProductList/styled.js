@@ -54,6 +54,7 @@ export const ProductWrapper = styled.div`
       flex-basis: 33%;
       flex-shrink: 0;
       margin-bottom: 80px;
+      min-height: 750px;
       box-sizing: border-box;
     }
     li:not(:nth-child(3n + 1)) {

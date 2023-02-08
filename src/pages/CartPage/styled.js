@@ -1,4 +1,4 @@
-import styled from "styled-components"; 
+import styled from "styled-components";
 
 export const CartWrapper = styled.div`
   position: relative;
@@ -28,7 +28,7 @@ export const CartWrapper = styled.div`
   }
 `;
 
-export const CartList = styled.div `
+export const CartList = styled.div`
   width: 62.5%;
   margin: 0 2.5% 0 0;
   
@@ -92,7 +92,7 @@ export const CartList = styled.div `
   }
 `
 
-export const PayInfo = styled.div `
+export const PayInfo = styled.div`
   position: sticky;
   top: 0px;
   right: 160px;
