@@ -4,8 +4,12 @@ import {
   ProductlistTitle,
   ProductlistItems,
   ProductlistTable,
+  EditButton,
+  DeleteButton,
 } from "./Productlist-styled";
+import { Link } from "react-router-dom";
 import { LayoutWrapper } from "../../components/common-styled";
+import axios from "axios";
 
 const Productlist = () => {
   const dummyList = [
@@ -22,16 +26,34 @@ const Productlist = () => {
       price: 15000,
     },
   ];
-  const [productName, setproductName] = useState("제품명");
-  const [productInventory, setproductInventory] = useState("주문정보");
-  const [productStatus, setproductStatus] = useState("상태");
-  const [productPrice, setproductPrice] = useState("가격");
+  const [productName, setproductName] = useState("");
+  const [productInventory, setproductInventory] = useState("");
+  const [productStatus, setproductStatus] = useState("");
+  const [productPrice, setproductPrice] = useState("");
   const [productList, setProuctList] = useState(dummyList);
 
-  useEffect(() => {}, [productList]);
-  const add = ({ name, inventory, status, price }) => {
-    setProuctList([...productList, { name, inventory, status, price }]);
+  useEffect(() => {
+    Productlist();
+  }, []);
+  const Productlist = async () => {
+    const response = await axios.get(`http://localhost:8001/api/products`);
+    const testList = response.data;
+    setProuctList(testList);
+    console.log(testList);
+    // const productdelete = await axios.delete(
+    //   `http://localhost:8001/api/products`
+    // );
+
+    // setProuctList([...productList, { name, inventory, status, price }]);
   };
+  // const DeleteButton = () => {
+  //   if (confirm("상품을 삭제 하시겠습니까?")) {
+  //     console.log(item.id, "상품 삭제");
+  //     return alert("상품이 삭제되었습니다.");
+  //   }
+  // };
+  //
+
   return (
     <LayoutWrapper>
       <ProductlistWrapper>
@@ -42,7 +64,7 @@ const Productlist = () => {
             <ProductlistTitle>
               <div>제품명</div>
               <div>주문정보</div>
-              <div>상태</div>
+              <div>제조사</div>
               <div>가격</div>
               <div></div>
             </ProductlistTitle>
@@ -50,13 +72,20 @@ const Productlist = () => {
             {productList.map((item, index) => {
               return (
                 <ProductlistItems key={index} className="key">
-                  <div>{item.name}</div>
+                  <div>{item.title}</div>
                   <div>{item.inventory}</div>
-                  <div>{item.status}</div>
+                  <div>{item.manufacturer}</div>
                   <div>{item.price}</div>
                   <div>
-                    <button>수정</button>
-                    <button>삭제</button>
+                    <EditButton>
+                      <Link
+                        to="../productedit"
+                        style={{ textDecoration: "none" }}
+                      >
+                        수정
+                      </Link>
+                    </EditButton>
+                    <DeleteButton>삭제</DeleteButton>
                   </div>
                 </ProductlistItems>
               );

@@ -1,9 +1,11 @@
+import axios from "axios";
 import React, { useState, useEffect } from "react";
 import {
   OrderlistWrapper,
   OrderlistTitle,
   OrderlistItems,
   OrderlistTable,
+  DeleteButton,
 } from "./Orderlist-styled";
 import { LayoutWrapper } from "../../components/common-styled";
 
@@ -52,6 +54,9 @@ const Orderlist = () => {
                   <div>{item.inventory}</div>
                   <div>{item.status}</div>
                   <div>{item.price}</div>
+                  <div>
+                    <DeleteButton>삭제</DeleteButton>
+                  </div>
                 </OrderlistItems>
               );
             })}
