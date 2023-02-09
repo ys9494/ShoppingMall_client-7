@@ -21,7 +21,7 @@ export const OrderlistTable = styled.div`
   }
   div {
     padding: 10px;
-    width: 25%;
+    width: 20%;
     border: 1px solid black;
   }
 `;
@@ -39,4 +39,12 @@ export const OrderlistItems = styled.li`
     justify-content: center;
     align-items: center;
   }
+`;
+
+export const DeleteButton = styled.button`
+  background-color: white;
+  color: black;
+  margin-left: 5px;
+  font-size: 15px;
+  padding: 5px 10px;
 `;

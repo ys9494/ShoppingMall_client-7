@@ -14,6 +14,7 @@ import MyDetails from "../pages/MyAccountPage/MyDetailsPage/MyDetails";
 import OrderHistory from "../pages/MyAccountPage/OrderHistoryPage/OrderHistory";
 import Productlist from "../pages/Productlistpage/Productlist";
 import Admin from "../pages/AdminPage/Admin";
+import Orderlist from "../pages/Orderlistpage/Orderlist";
 
 export const ROUTE = {
   HOME: {
@@ -40,7 +41,6 @@ export const ROUTE = {
     path: "/cart",
     link: "/cart",
     element: Cart,
-
   },
   PRODUCTADD: {
     path: "/productadd",
@@ -53,8 +53,8 @@ export const ROUTE = {
     element: Productedit,
   },
   ORDER: {
-    path: "/order",
-    link: "/order",
+    path: "/order/:id",
+    link: "/order/:id",
     element: Order,
   },
   PRODUCT: {
@@ -96,6 +96,11 @@ export const ROUTE = {
     path: "/admin",
     link: "/admin",
     element: Admin,
+  },
+  Orderlist: {
+    path: "/orderlist",
+    link: "/orderlist",
+    element: Orderlist,
   },
 };
 

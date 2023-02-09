@@ -57,7 +57,7 @@ const Login = () => {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="깃헙테스트 나중에 바꾸기 이메일을 입력하세요"
+              placeholder="이메일을 입력하세요"
             />
           </InputWrapper>
           <InputWrapper>
