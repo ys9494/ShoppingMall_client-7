@@ -32,12 +32,16 @@ const Product = () => {
   useEffect(() => {
     (async () => {
       try {
-
-        const response = await axios.get(`http://localhost:8001/api/products/category/${category}`);
-        const products = response.data;
-
-        setProductList(products);
-      } catch (err) {
+        if(category === 'all') {
+          const response = await axios.get("http://localhost:8001/api/products");
+          const products = response.data;
+          setProductList(products);
+        } else {
+          const response = await axios.get(`http://localhost:8001/api/products/category/${category}`);
+          const products = response.data;
+          setProductList(products);
+        }
+      } catch(err) {
         console.log(`ERROR: ${err}`);
       }
     })();

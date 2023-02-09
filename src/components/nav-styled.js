@@ -12,6 +12,10 @@ export const NavContainer = styled.div`
     margin-bottom: 20px;
   }
 
+  ul li:not(:first-child) {
+    margin-left: 5px;
+  }
+
   span {
     cursor: pointer;
   }
