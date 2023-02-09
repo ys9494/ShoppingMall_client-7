@@ -2,21 +2,42 @@ import axios from "axios";
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { LinkStyle, ProductWrapper } from "./styled";
+import queryString from 'query-string';
 
 const Product = () => {
   const [productList, setProductList] = useState([]);
   const { category } = useParams();
 
-  const imgError = (e) => e.target.src="https://kuku-keke.com/wp-content/uploads/2020/04/2491_6.png";
+  useEffect(() => {
+    const init = () => {
+      // this.props.location.search  <- class형 컴포넌트
+
+      let qs = queryString.parse(window.location.search);
+      console.log(qs, "qs");
+
+      if (Object.keys(qs).length === 0) return; // or defense code
+    }
+    init();
+
+  }, [])
+
+
+
+
+
+
+
+  const imgError = (e) => e.target.src = "https://kuku-keke.com/wp-content/uploads/2020/04/2491_6.png";
 
   useEffect(() => {
     (async () => {
       try {
-        const response = await axios.get("http://localhost:8001/api/products");
+
+        const response = await axios.get(`http://localhost:8001/api/products/category/${category}`);
         const products = response.data;
-        const compare = products.filter(product => product.categoryId === category)
-        setProductList(compare);
-      } catch(err) {
+
+        setProductList(products);
+      } catch (err) {
         console.log(`ERROR: ${err}`);
       }
     })();
@@ -26,13 +47,13 @@ const Product = () => {
     <>
       <ProductWrapper>
         <ul>
-          { 
+          {
             productList &&
             productList.map(item => {
               return (
                 <li key={item._id}>
                   <LinkStyle to={`/product/detail/${item._id}`}>
-                    { 
+                    {
                       item.imageUrl &&
                       <img
                         src={item.imageUrl}
@@ -44,7 +65,7 @@ const Product = () => {
                       <p>{item.title}</p>
                       <span>
                         ₩ {Number(item.price).toLocaleString("ko-KR")}
-                        </span>
+                      </span>
                     </div>
                   </LinkStyle>
                 </li>
