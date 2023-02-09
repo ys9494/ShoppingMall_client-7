@@ -1,19 +1,19 @@
 import React from "react";
 import { LayoutWrapper } from "../../../components/common-styled";
-import { OrderHistoryWrapper, TitleWrapper } from "./orderhistory-styled";
-import OrderedItemList from "./OrderedItemList";
+import { OrderHistoryWrapper, TitleWrapper } from "./userorderhistory-styled";
+import UserOrderedItemList from "./UserOrderedItemList";
 
-const OrderHistory = () => {
+const UserOrderHistory = () => {
   return (
     <LayoutWrapper>
       <OrderHistoryWrapper>
         <TitleWrapper>
           <h1>ORDER HISTORY</h1>
         </TitleWrapper>
-        <OrderedItemList />
+        <UserOrderedItemList />
       </OrderHistoryWrapper>
     </LayoutWrapper>
   );
 };
 
-export default OrderHistory;
+export default UserOrderHistory;

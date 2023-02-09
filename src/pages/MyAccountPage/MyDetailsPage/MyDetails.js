@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { ROUTE } from "../../../routes/route";
 import axios from "axios";
+import jwt_decode from "jwt-decode";
 import {
   MyDetailsWrapper,
   DetailFormWrapper,
@@ -25,12 +26,16 @@ const MyDetails = () => {
   const [zipCode, setZipCode] = useState("");
   const [city, setCity] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [userId, setUserId] = useState("");
+
+  const navigate = useNavigate();
 
   /** 사용자 정보 불러오기 */
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    if (!localStorage.getItem("token")) {
+      return navigate("/");
+    }
 
+    const token = localStorage.getItem("token");
     axios
       .get("http://localhost:8001/api/users/account", {
         headers: {
@@ -39,9 +44,10 @@ const MyDetails = () => {
       })
       .then((response) => {
         // Handle success.
-        console.log("Data: ", response.data);
-        console.log("id", response.data._id);
-        setUserId(response.data._id);
+        console.log("User Data: ", response.data);
+        console.log("user id", response.data._id);
+
+        /** 유저 정보 값 불러오기 */
         setEmail(response.data.email);
         setName(response.data.name);
         setAddress1(response.data.address1 ? response.data.address1 : address1);
@@ -63,6 +69,8 @@ const MyDetails = () => {
     e.preventDefault();
 
     const token = localStorage.getItem("token");
+    const decoded = jwt_decode(token);
+    const { userId } = decoded;
 
     axios
       .patch(
