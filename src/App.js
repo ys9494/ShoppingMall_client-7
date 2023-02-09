@@ -5,10 +5,9 @@ import Header from "./components/Header";
 import Nav from "./components/Nav";
 import { ROUTE_ARR } from "./routes/route";
 
-// contextAPI
-
 function App() {
   const [cart, setCart] = useState([]);
+  const [count, setCount] = useState(1);
 
   return (
     <>
@@ -20,7 +19,14 @@ function App() {
           return (
             <Route
               path={route.path}
-              element={<route.element cart={cart} setCart={setCart} />}
+              element={
+                <route.element
+                  count={count}
+                  setCount={setCount}
+                  cart={cart}
+                  setCart={setCart}
+                />
+              }
               key={index}
             />
             // <Route path={route.path} element={<route.element />} key={index} />
