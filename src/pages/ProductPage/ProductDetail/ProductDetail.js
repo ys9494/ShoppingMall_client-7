@@ -1,35 +1,32 @@
-import axios from 'axios';
+import axios from "axios";
 import React, { useEffect, useState, useRef } from "react";
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 import Counter from "./Counter";
 import {
-  Button, ProductDetailWrapper,
+  Button,
+  ProductDetailWrapper,
   ProductImg,
-  ProductInfo, LinkStyle
+  ProductInfo,
+  LinkStyle,
 } from "./productDetail-styled";
 import RadioBox from "./RadioBox";
-
-import jwt_decode  from 'jwt-decode';
-const token = localStorage.getItem("token");
-const decoded = jwt_decode(token);
-const { userId } = decoded;
 
 const Product = ({ cart, setCart, count, setCount }) => {
   const { id } = useParams();
 
-  const [product, setProduct] = useState({})
+  const [product, setProduct] = useState({});
   useEffect(() => {
-    axios.get("http://localhost:8001/api/products/").then((data) => {
-      setProduct(
-        data.data.find((product) => product._id === (id))
-      );
-    });
+    axios
+      .get("http://kdt-ai6-team07.elicecoding.com/api/products/")
+      .then((data) => {
+        setProduct(data.data.find((product) => product._id === id));
+      });
   }, [id]);
 
   // 숫자에 콤마 추가(1,000)
   const convertPrice = (price) => {
-    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-  }
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
 
   // 제품 수량 카운팅
   const handleQuantity = (quantity) => {
@@ -40,7 +37,6 @@ const Product = ({ cart, setCart, count, setCount }) => {
       setCount(count - 1);
     }
   };
-
 
   // 장바구니 중복 체크
 
@@ -57,7 +53,7 @@ const Product = ({ cart, setCart, count, setCount }) => {
     };
     // 값만 수정된 새로운 배열 리턴
     setCart([...cart.slice(0, idx), cartItem, ...cart.slice(idx + 1)]);
-  }
+  };
 
   // cart에 추가
   const handleCart = () => {
@@ -68,10 +64,7 @@ const Product = ({ cart, setCart, count, setCount }) => {
       price: product.price,
       manufacturer: product.manufacturer,
       quantity: count,
-
-
     };
-
 
     // found가 있으면 중복된 물건
     const found = cart.find((el) => el._id === cartItem._id);
@@ -80,14 +73,17 @@ const Product = ({ cart, setCart, count, setCount }) => {
     if (found) setQuantity(cartItem._id, found.quantity + count);
     else {
       setCart([...cart, cartItem]);
-      localStorage.setItem("cart", JSON.stringify([...cart, cartItem]))
+      localStorage.setItem("cart", JSON.stringify([...cart, cartItem]));
     }
     //기존 카트는 유지하고 카트 item 추가
 
-    console.log(cart)
-  }
+    console.log(cart);
+  };
 
-  const size = { type: "size", option: ["small", "medium", "large", "xlarge", "xxlarge"] };
+  const size = {
+    type: "size",
+    option: ["small", "medium", "large", "xlarge", "xxlarge"],
+  };
 
   return (
     product && (
@@ -95,10 +91,7 @@ const Product = ({ cart, setCart, count, setCount }) => {
         <ProductDetailWrapper>
           <div>
             <ProductImg>
-              <img
-                src={product.imageUrl}
-                alt="image"
-              />
+              <img src={product.imageUrl} alt="image" />
             </ProductImg>
             <ProductInfo>
               <div>
@@ -109,11 +102,16 @@ const Product = ({ cart, setCart, count, setCount }) => {
                 <Counter />
                 <RadioBox options={size} />
                 <Button onClick={() => handleCart()}>쇼핑백 담기</Button>
-                <LinkStyle to={`/order/${userId}`} state={{
-                  count, 
-                  total: product.price * count,
-                  product: product.title
-                }}>구매하기</LinkStyle>
+                <LinkStyle
+                  to={`/order`}
+                  state={{
+                    count,
+                    total: product.price * count,
+                    product: product.title,
+                  }}
+                >
+                  구매하기
+                </LinkStyle>
               </div>
               <button onClick={() => handleQuantity("plus")}>플러스</button>
               <br />
@@ -134,7 +132,8 @@ const Product = ({ cart, setCart, count, setCount }) => {
           </div>
         </ProductDetailWrapper>
       </>
-    ));
+    )
+  );
 };
 
 export default Product;

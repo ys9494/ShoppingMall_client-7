@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const MyAccountWrapper = styled.div`
   width: 100%;
   height: 100vh;
-  background-image: url("images/main.jpg");
+  background-image: url(${(props) => props.urlPath});
   background-repeat: no-repeat;
   background-size: cover;
   display: flex;

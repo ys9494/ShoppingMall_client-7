@@ -32,7 +32,9 @@ const UserOrderedItemList = () => {
   return (
     <OrderedItemListWrapper>
       {orderedList &&
-        orderedList.map((item) => <UserOrderedItem key={item._id} {...item} />)}
+        orderedList.map((item, index) => (
+          <UserOrderedItem key={index} {...item} />
+        ))}
     </OrderedItemListWrapper>
   );
 };

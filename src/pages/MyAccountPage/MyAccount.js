@@ -25,7 +25,7 @@ const MyAccount = () => {
   }, []);
   return (
     <LayoutWrapper>
-      <MyAccountWrapper>
+      <MyAccountWrapper urlPath={process.env.PUBLIC_URL + "/img/main.jpg"}>
         <AccountNavWrapper>
           <h1>MY ACCOUNT</h1>
           <GotoMyDetails>

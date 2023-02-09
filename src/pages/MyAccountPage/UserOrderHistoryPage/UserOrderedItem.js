@@ -10,7 +10,7 @@ import {
   ItemInfo,
   OrderStatus,
 } from "./userordereditem-styled";
-import { timeFormat } from "../../../utils/utils";
+
 import * as API from "../../../utils/api";
 
 const UserOrderedItem = (item) => {
@@ -19,8 +19,6 @@ const UserOrderedItem = (item) => {
   const getOrderInfoAPI = async () => {
     try {
       const { data } = await API.get(`/order/product/${item._id}`);
-      console.log(item);
-      console.log("data", data);
       const { productId, productQuantity, productSize, orderId } = data[0];
       setOrderedItem({
         ...item,
@@ -29,7 +27,6 @@ const UserOrderedItem = (item) => {
         productSize,
         orderId,
       });
-
       console.log("item", orderedItem);
     } catch (err) {
       console.log("Err", err?.response?.data);
@@ -53,7 +50,7 @@ const UserOrderedItem = (item) => {
       {orderedItem && (
         <ItemDetail>
           <OrderInfo>
-            <span>{orderedItem?.date && timeFormat(orderedItem?.date)} </span>
+            <span>{(orderedItem?.createdAt).slice(0, 10)} </span>
             <span>({orderedItem?.orderNumber})</span>
           </OrderInfo>
           <ItemWrapper>
@@ -72,7 +69,7 @@ const UserOrderedItem = (item) => {
                     KRW{" "}
                     {Number(orderedItem?.totalPrice).toLocaleString("ko-KR")}
                   </p>
-                  {/* <p>QTY : {orderedItem?.productQuantity}</p> */}
+                  <p>QTY : {orderedItem?.productQuantity}</p>
                 </div>
               </ItemInfo>
               <OrderStatus>

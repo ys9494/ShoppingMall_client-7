@@ -26,15 +26,16 @@ const Nav = () => {
           <li>
             <LinkStyle to="/product/all">전체 상품</LinkStyle>
           </li>
-          {categories.map((category) => {
-            return (
-              <li key={category._id}>
-                <LinkStyle to={`/product/${category._id}`}>
-                  {category.title}
-                </LinkStyle>
-              </li>
-            );
-          })}
+          {categories &&
+            categories.map((category, index) => {
+              return (
+                <li key={index}>
+                  <LinkStyle to={`/product/${category._id}`}>
+                    {category.title}
+                  </LinkStyle>
+                </li>
+              );
+            })}
         </ul>
       </NavContainer>
     </>

@@ -6,7 +6,7 @@ const Main = () => {
     <>
       <MainWrapper>
         <div>
-          <img src="images/main.jpg" alt="MainImg" />
+          <img src={process.env.PUBLIC_URL + "/img/main.jpg"} alt="MainImg" />
         </div>
       </MainWrapper>
     </>

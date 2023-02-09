@@ -1,10 +1,8 @@
-import React from 'react';
-import { useState } from 'react';
-import Counter from '../ProductPage/ProductDetail/Counter';
+import React from "react";
+import { useState } from "react";
+import Counter from "../ProductPage/ProductDetail/Counter";
 
 const itemList = ({ carts, onComplete, onRemove, count, setCount }) => {
-
-
   // 제품 수량 카운팅
   const handleQuantity = (quantity) => {
     if (quantity === "plus") {
@@ -18,21 +16,17 @@ const itemList = ({ carts, onComplete, onRemove, count, setCount }) => {
   return (
     <div>
       <ol>
-        {carts.map((item, index) => {
-          return (
-            <li key={item.key} className={item.isCompleted ? 'complete' : ''}>
-
-              <img
-                src={item.imageUrl}
-                alt="Product"
-              />
-              <div>
-                <p>{item.title}</p>
-                <p>₩{item.price}</p>
-                <p>{item.manufacturer}</p>
-
-              </div>
-              {/* <button
+        {carts &&
+          carts.map((item, index) => {
+            return (
+              <li key={item._id} className={item.isCompleted ? "complete" : ""}>
+                <img src={item.imageUrl} alt="Product" />
+                <div>
+                  <p>{item.title}</p>
+                  <p>₩{item.price}</p>
+                  <p>{item.manufacturer}</p>
+                </div>
+                {/* <button
                 type="button"
                 onClick={() => {
                   onComplete(index);
@@ -40,20 +34,22 @@ const itemList = ({ carts, onComplete, onRemove, count, setCount }) => {
               >
                 선택
               </button> */}
-              <button
-                type="button"
-                onClick={() => {
-                  onRemove(index);
-                }}
-              >
-                삭제
-              </button>
-              <button onClick={() => handleQuantity("plus")}>플러스</button>
-              <span>수량: {count}</span>
-              <button onClick={() => handleQuantity("minus")}>마이너스</button>
-            </li>
-          );
-        })}
+                <button
+                  type="button"
+                  onClick={() => {
+                    onRemove(index);
+                  }}
+                >
+                  삭제
+                </button>
+                <button onClick={() => handleQuantity("plus")}>플러스</button>
+                <span>수량: {count}</span>
+                <button onClick={() => handleQuantity("minus")}>
+                  마이너스
+                </button>
+              </li>
+            );
+          })}
       </ol>
     </div>
   );
