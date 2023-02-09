@@ -1,28 +1,27 @@
 import { faCartShopping, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  HeaderContainer, HeaderNav,
-  LinkStyle, LogoBox
+  HeaderContainer,
+  HeaderNav,
+  LinkStyle,
+  LogoBox,
 } from "./header-styled";
 
-const Header = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+import { useUserState, useUserDispatch } from "../context/UserContext";
 
-  useEffect(() => {
-    if (localStorage.getItem("token")) {
-      setIsLoggedIn(true);
-    } else {
-      setIsLoggedIn(false);
-    }
-  }, []);
+const Header = () => {
+  const { isLoggedIn } = useUserState();
+  const dispatch = useUserDispatch();
 
   const logoutSubmit = () => {
     if (confirm("로그아웃 하시겠습니까?")) {
       localStorage.removeItem("token");
+      dispatch({
+        type: "LOGOUT",
+      });
       console.log("로그아웃 완료");
-      setIsLoggedIn(false);
     }
   };
 
@@ -39,7 +38,7 @@ const Header = () => {
         </LogoBox>
         <HeaderNav>
           <ul>
-            {isLoggedIn ? (
+            {isLoggedIn && isLoggedIn ? (
               <li onClick={logoutSubmit}>
                 <LinkStyle to="/">LOGOUT</LinkStyle>
               </li>

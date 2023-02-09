@@ -5,25 +5,32 @@ import {
   GotoMyDetails,
   GotoOrderHistory,
 } from "./myaccount-styled";
-import { Link } from "react-router-dom";
-import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import { ROUTE } from "../../routes/route";
+import { useUserState, useUserDispatch } from "../../context/UserContext";
 
 const MyAccount = () => {
+  const navigate = useNavigate();
+  const { isAdmin } = useUserState();
+
   useEffect(() => {
     if (!localStorage.getItem("token")) {
-      console.log("logged out");
+      console.log("not");
+      return navigate(ROUTE.LOGIN.link);
     }
-  });
-
+    if (isAdmin === true) {
+      navigate(ROUTE.ADMIN.link);
+    }
+  }, []);
   return (
     <MyAccountWrapper>
       <AccountNavWrapper>
         <h1>MY ACCOUNT</h1>
         <GotoMyDetails>
-          <Link to={`./mydetails`}>MY DETAILS</Link>
+          <Link to={ROUTE.MYDETIALS.link}>MY DETAILS</Link>
         </GotoMyDetails>
         <GotoOrderHistory>
-          <Link to={`./orderhistory`}>ORDER HISTORY</Link>
+          <Link to={ROUTE.USERORDERHISTORY.link}>ORDER HISTORY</Link>
         </GotoOrderHistory>
       </AccountNavWrapper>
     </MyAccountWrapper>
