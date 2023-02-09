@@ -4,7 +4,7 @@ import { CartWrapper, CartList, PayInfo } from "./styled";
 import CartView from './CartView';
 import jwt_decode from "jwt-decode";
 import 'bootstrap/dist/css/bootstrap.min.css';
-const Cart = ({ count, setCount, convertPrice }) => {
+const Cart = ({ count, setCount }) => {
   const [carts, setCarts] = useState([]);
   let [price, setPrice] = useState(0);
   let [total, setTotal] = useState(0);
@@ -15,6 +15,7 @@ const Cart = ({ count, setCount, convertPrice }) => {
 
   // 총 가격
   const getTotalPrice = () => {
+
     return carts.reduce((tot, el) =>
       tot + (el.price * el.quantity)
       , 0)
@@ -87,10 +88,10 @@ const Cart = ({ count, setCount, convertPrice }) => {
             <div>
               <p>결제정보</p>
               <ul>
-                <li>상품수 {convertPrice(count)} </li>
-                <li>상품 금액 {convertPrice(price)}</li>
+                <li>상품수 {Number(count).toLocaleString("ko-KR")} </li>
+                <li>상품 금액 {Number(total).toLocaleString("ko-KR")}</li>
               </ul>
-              <p>총 결제금액{total}</p>
+              <p>총 결제금액{Number(count * price).toLocaleString("ko-KR")}</p>
             </div>
             <button className="btn btn-outline-primary mb-3" onClick={handleRemoveAll}>쇼핑백 비우기</button>
             <Link to={"http://localhost:3000/order"} state={{

@@ -33,14 +33,7 @@ const itemList = ({ carts, onComplete, onRemove, count, setCount }) => {
                 <p>{item.manufacturer}</p>
 
               </div>
-              {/* <button
-                type="button"
-                onClick={() => {
-                  onComplete(index);
-                }}
-              >
-                선택
-              </button> */}
+
               <button
                 type="button"
                 onClick={() => {

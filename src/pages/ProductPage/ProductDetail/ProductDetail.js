@@ -8,28 +8,33 @@ import {
   ProductInfo, LinkStyle
 } from "./productDetail-styled";
 import RadioBox from "./RadioBox";
-import jwt_decode from 'jwt-decode';
-
+import * as API from "../../../utils/api"
 
 const Product = ({ cart, setCart, count, setCount }) => {
 
   const { id } = useParams();
   const [object, setObject] = useState(1)
-  // const [disabled, setDisabled] = useState(true);
-
   const [product, setProduct] = useState({})
-  useEffect(() => {
-    axios.get("http://localhost:8001/api/products/").then((data) => {
-      setProduct(
-        data.data.find((product) => product._id === (id))
-      );
-    });
-  }, [id]);
 
-  // 숫자에 콤마 추가(1,000)
-  const convertPrice = (price) => {
-    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+  const getProductAPI = async () => {
+    try {
+      API.get("/products/").then((data) => {
+        setProduct(
+          data.data.find((product) => product._id == id)
+        )
+      })
+
+    } catch (err) {
+      console.log("Err", err);
+    }
   }
+
+  useEffect(() => {
+    getProductAPI()
+  }, [id])
+
+
 
   // 제품 수량 카운팅
   const handleQuantity = (quantity) => {
@@ -61,6 +66,7 @@ const Product = ({ cart, setCart, count, setCount }) => {
     };
     // 값만 수정된 새로운 배열 리턴
     setCart([...cart.slice(0, idx), cartItem, ...cart.slice(idx + 1)]);
+
   }
 
   // cart에 추가
@@ -108,17 +114,9 @@ const Product = ({ cart, setCart, count, setCount }) => {
             <ProductInfo>
               <div>
                 <p>{product.title}</p>
-                <span>₩{convertPrice(product.price + "")}</span>
+                <span>₩{Number(product.price).toLocaleString("ko-KR")}</span>
               </div>
               <div>
-                {/* <button onClick={() => handleQuantity("plus")}>플러스</button>
-                <br />
-                <span>총 수량 {convertPrice(object)}</span>
-                <br />
-                <span>총 가격 {convertPrice(product.price * object)}</span>
-                <button onClick={() => handleQuantity("minus")}>마이너스</button> */}
-
-
                 <Counter handleQuantity={handleQuantity} object={object} product={product} />
                 <RadioBox options={size} />
                 <Button className="alert alert-primary" role="alert" onClick={() => {
