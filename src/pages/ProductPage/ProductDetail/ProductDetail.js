@@ -9,11 +9,10 @@ import {
 } from "./productDetail-styled";
 import RadioBox from "./RadioBox";
 
-const Product = ({ cart, setCart }) => {
+const Product = ({ cart, setCart, count, setCount }) => {
   const { id } = useParams();
-  const [product, setProduct] = useState({});
-  const [count, setCount] = useState(1);
 
+  const [product, setProduct] = useState({})
   useEffect(() => {
     axios.get("http://localhost:8001/api/products/").then((data) => {
       setProduct(
