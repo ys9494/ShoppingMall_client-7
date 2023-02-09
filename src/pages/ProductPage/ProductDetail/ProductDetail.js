@@ -1,31 +1,30 @@
 import axios from 'axios';
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams } from 'react-router-dom';
+import Counter from "./Counter";
 import {
-  ProductDetailWrapper,
+  Button, ProductDetailWrapper,
   ProductImg,
-  ProductInfo, Button,
+  ProductInfo, LinkStyle
 } from "./productDetail-styled";
 import RadioBox from "./RadioBox";
 
 const Product = ({ cart, setCart }) => {
   const { id } = useParams();
-
-  const [product, setProduct] = useState({})
+  const [product, setProduct] = useState({});
   const [count, setCount] = useState(1);
+
   useEffect(() => {
     axios.get("http://localhost:8001/api/products/").then((data) => {
       setProduct(
         data.data.find((product) => product._id === (id))
       );
-
     });
   }, [id]);
 
   // 숫자에 콤마 추가(1,000)
   const convertPrice = (price) => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-
   }
 
   // 제품 수량 카운팅
@@ -103,10 +102,14 @@ const Product = ({ cart, setCart }) => {
                 <span>₩{convertPrice(product.price + "")}</span>
               </div>
               <div>
-                {/* <RadioBox options={size} /> */}
+                <Counter />
                 <RadioBox options={size} />
-                <button onClick={() => handleCart()}>쇼핑백 담기</button>
-                <button>구매하기</button>
+                <Button onClick={() => handleCart()}>쇼핑백 담기</Button>
+                <LinkStyle to={`/order/${userId}`} state={{
+                  count, 
+                  total: product.price * count,
+                  product: product.title
+                }}>구매하기</LinkStyle>
               </div>
               <button onClick={() => handleQuantity("plus")}>플러스</button>
               <br />

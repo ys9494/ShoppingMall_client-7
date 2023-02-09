@@ -6,16 +6,19 @@ import { LinkStyle, ProductWrapper } from "./styled";
 const Product = () => {
   const [productList, setProductList] = useState([]);
   const { category } = useParams();
-
   const imgError = (e) => e.target.src="https://kuku-keke.com/wp-content/uploads/2020/04/2491_6.png";
-
   useEffect(() => {
     (async () => {
       try {
-        const response = await axios.get("http://localhost:8001/api/products");
-        const products = response.data;
-        const compare = products.filter(product => product.categoryId === category)
-        setProductList(compare);
+        if(category === 'all') {
+          const response = await axios.get("http://localhost:8001/api/products");
+          const products = response.data;
+          setProductList(products);
+        } else {
+          const response = await axios.get(`http://localhost:8001/api/products/category/${category}`);
+          const products = response.data;
+          setProductList(products);
+        }
       } catch(err) {
         console.log(`ERROR: ${err}`);
       }

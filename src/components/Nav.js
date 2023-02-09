@@ -19,6 +19,7 @@ const Nav = () => {
     <>
       <NavContainer>
           <ul>
+            <li><LinkStyle to="/product/all">전체 상품</LinkStyle></li>
             {
               categories.map(category => {
                 return (
