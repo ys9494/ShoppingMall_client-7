@@ -8,13 +8,11 @@ import {
   ProductInfo, LinkStyle
 } from "./productDetail-styled";
 import RadioBox from "./RadioBox";
-
 import jwt_decode from 'jwt-decode';
-const token = localStorage.getItem("token");
-const decoded = jwt_decode(token);
-const { userId } = decoded;
+
 
 const Product = ({ cart, setCart, count, setCount }) => {
+
   const { id } = useParams();
   const [object, setObject] = useState(1)
   // const [disabled, setDisabled] = useState(true);
@@ -129,7 +127,7 @@ const Product = ({ cart, setCart, count, setCount }) => {
                 }
 
                 }>쇼핑백 담기</Button>
-                <LinkStyle to={`/order/${userId}`} state={{
+                <LinkStyle to={"/order"} state={{
                   count,
                   total: product.price * object,
                   product: product.title

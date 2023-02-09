@@ -5,15 +5,9 @@ import CartView from './CartView';
 import jwt_decode from "jwt-decode";
 import 'bootstrap/dist/css/bootstrap.min.css';
 const Cart = ({ count, setCount, convertPrice }) => {
-
-
-  const token = localStorage.getItem("token");
-  const decoded = jwt_decode(token);
-  const { userId } = decoded;
   const [carts, setCarts] = useState([]);
   let [price, setPrice] = useState(0);
   let [total, setTotal] = useState(0);
-  const [delivery, setDelivery] = useState(0);
   useEffect(() => {
     setCarts(JSON.parse(localStorage.getItem("cart")));
   }, [])
@@ -99,7 +93,7 @@ const Cart = ({ count, setCount, convertPrice }) => {
               <p>총 결제금액{total}</p>
             </div>
             <button className="btn btn-outline-primary mb-3" onClick={handleRemoveAll}>쇼핑백 비우기</button>
-            <Link to={`http://localhost:3000/order/${userId}`} state={{
+            <Link to={"http://localhost:3000/order"} state={{
               total,
               price,
               count,

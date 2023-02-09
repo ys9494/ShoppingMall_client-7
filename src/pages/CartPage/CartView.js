@@ -18,9 +18,10 @@ const itemList = ({ carts, onComplete, onRemove, count, setCount }) => {
   return (
     <div>
       <ol>
-        {carts.map((item, index) => {
+        {carts && carts.map((item, index) => {
           return (
-            <li key={item.key} className={item.isCompleted ? 'complete' : ''}>
+
+            <li key={item._id} className={item.isCompleted ? 'complete' : ''}>
 
               <img
                 src={item.imageUrl}
