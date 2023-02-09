@@ -1,15 +1,39 @@
-import React from 'react';
-import { OrderInfo, OrderWrapper, PayInfo } from "./styled";
+import axios from 'axios';
+import React, { useRef } from 'react';
 import { useLocation } from 'react-router-dom';
+import { OrderInfo, OrderWrapper, PayInfo } from "./styled";
+import jwt_decode from "jwt-decode";
+
 const Order = () => {
-  // total,
-  // price,
-  // count,
-
   const location = useLocation();
+	const {count, total, product} = location.state;
+  const inputName = useRef();
+  const inputPhone = useRef();
+  const inputAddress = useRef();
+  const inputAddress2 = useRef();
+  const inputZipcode = useRef();
 
-  const { total, price, count } = location.state;
+  const token = localStorage.getItem("token");
+  const decoded = jwt_decode(token);
+  const { userId } = decoded;
 
+  console.log(inputName);
+
+  const orderHandler = async () => {
+    try {
+      const data = {
+        "orderNumber": "100000",
+        userId,
+        "consignee": inputName.current.value,
+        "address": `(${inputZipcode.current.value}) ${inputAddress.current.value} ${inputAddress2.current.value}`,
+        "phoneNumber": inputPhone.current.value
+      }
+      console.log(data);
+      await axios.post("http://localhost:8001/api/order", data);
+    } catch(err) {
+      console.log(err);
+    }
+  }
 
   return (
     <>
@@ -23,23 +47,23 @@ const Order = () => {
             <form>
               <div>
                 <label htmlFor="name">NAME</label>
-                <input type="text" id="name" />
+                <input type="text" id="name" placeholder="Input your name" ref={inputName} />
               </div>
               <div>
                 <label htmlFor="phone">PHONE</label>
-                <input type="text" id="phone" />
+                <input type="text" id="phone" placeholder='Input Phone Number' ref={inputPhone} />
               </div>
               <div>
                 <label htmlFor="address">ADDRESS</label>
-                <input type="text" id="address" />
+                <input type="text" id="address" placeholder='Your Address' ref={inputAddress} />
               </div>
               <div>
                 <label htmlFor="address2">ADDRESS2</label>
-                <input type="text" id="address2" />
+                <input type="text" id="address2" placeholder='상세주소' ref={inputAddress2} />
               </div>
               <div>
                 <label htmlFor="zipcode">ZIPCODE</label>
-                <input type="text" id="zipcode" />
+                <input type="text" id="zipcode" placeholder='우편번호' ref={inputZipcode} />
               </div>
             </form>
           </OrderInfo>
@@ -47,14 +71,22 @@ const Order = () => {
             <div>
               <p>결제정보</p>
               <ul>
-                <li>주문 상품</li>
-                <li>  1`상품 금액{price}</li>
-                <li>배송비</li>
+                <li>
+                  주문 상품
+                  <span>{product} 외 {count-1}개</span>
+                </li>
+                <li>
+                  상품 금액
+                  <span>{total}원</span>
+                </li>
+                <li>
+                  배송비
+                  <span>3000원</span>
+                </li>
               </ul>
-              <p>총 결제금액{total}</p>
+              <p>총 결제금액 <span>{total + 3000}원</span></p>
             </div>
-            <button>쇼핑백 비우기</button>
-            <button>주문 하기</button>
+            <button onClick={orderHandler}>주문 하기</button>
           </PayInfo>
         </div>
       </OrderWrapper>

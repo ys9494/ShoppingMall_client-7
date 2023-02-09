@@ -85,34 +85,33 @@ export const Button = styled.button`
   height: 70px;
   margin: 15px 0;
   font-size: 20px;
-  background-color: #fff;
-  border: 2px solid #d9d9d9;
+  border: 2px solid #000;
+  background-color: #000;
+  color: #fff;
   cursor: pointer;
   transition: all 0.3s;
-
   &:hover {
-    background-color: #d9d9d9;
-  }
-
-  ${
-    (props) => props.black &&
-    css`
-      background-color: #000;
-      color: #fff;
-      &:hover {
-        background-color: #000;
-        opacity: 0.7;
-      }
-    `
+    background-color: #000;
+    opacity: 0.7;
   }
 `
 
+
 export const LinkStyle = styled(Link)`
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   height: 70px;
   margin: 15px 0;
   font-size: 20px;
+  background-color: #fff;
+  border: 2px solid #d9d9d9;
   cursor: pointer;
   transition: all 0.3s;
+  text-decoration: none;
+
+  &:hover {
+    background-color: #d9d9d9;
+  }
 `
