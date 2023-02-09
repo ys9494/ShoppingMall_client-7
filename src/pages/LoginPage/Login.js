@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
 
 import { Link, useNavigate } from "react-router-dom";
@@ -10,6 +10,8 @@ import { post } from "../../utils/api";
 
 import { getUserId } from "../../utils/utils";
 
+import { useUserState, useUserDispatch } from "../../context/UserContext";
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,12 +19,17 @@ const Login = () => {
   const passwordRef = useRef();
   const navigate = useNavigate();
 
+  const dispatch = useUserDispatch();
+
   /** 로그인 API */
   const loginAPI = async (data) => {
     try {
       const response = await post("/users/login", data);
-      console.log(response);
+      console.log(response.data);
       localStorage.setItem("token", response.data.token);
+      dispatch({
+        type: "LOGIN",
+      });
       console.log(getUserId());
     } catch (err) {
       console.log("Error", err.response);
@@ -44,38 +51,40 @@ const Login = () => {
   );
 
   return (
-    <LayoutWrapper>
-      <LoginWrapper>
-        <h1>LOG IN</h1>
-        <LoginForm onSubmit={loginSubmit}>
-          <InputWrapper>
-            <label>EMAIL</label>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="이메일을 입력하세요"
-            />
-          </InputWrapper>
-          <InputWrapper>
-            <label>PASSWORD</label>
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              ref={passwordRef}
-              placeholder="비밀번호를 입력하세요"
-            />
-          </InputWrapper>
-          <Button>LOG IN</Button>
-          <GotoSingup>
-            <Link to="/signup">Create an account</Link>
-          </GotoSingup>
-        </LoginForm>
-      </LoginWrapper>
-    </LayoutWrapper>
+    <>
+      <LayoutWrapper>
+        <LoginWrapper>
+          <h1>LOG IN</h1>
+          <LoginForm onSubmit={loginSubmit}>
+            <InputWrapper>
+              <label>EMAIL</label>
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="이메일을 입력하세요"
+              />
+            </InputWrapper>
+            <InputWrapper>
+              <label>PASSWORD</label>
+              <input
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                ref={passwordRef}
+                placeholder="비밀번호를 입력하세요"
+              />
+            </InputWrapper>
+            <Button>LOG IN</Button>
+            <GotoSingup>
+              <Link to="/signup">Create an account</Link>
+            </GotoSingup>
+          </LoginForm>
+        </LoginWrapper>
+      </LayoutWrapper>
+    </>
   );
 };
 
