@@ -8,7 +8,7 @@ const Nav = () => {
     (async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8001/api/categories"
+          "http://kdt-ai6-team07.elicecoding.com/api/categories"
         );
         const category = response.data;
         setCategories(category);

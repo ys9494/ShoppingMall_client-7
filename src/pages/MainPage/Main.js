@@ -6,10 +6,7 @@ const Main = () => {
     <>
       <MainWrapper>
         <div>
-          <img
-            src="https://global.mardimercredi.com/img/imgmain-intro-1014-2.png"
-            alt="MainImg"
-          />
+          <img src="images/main.jpg" alt="MainImg" />
         </div>
       </MainWrapper>
     </>

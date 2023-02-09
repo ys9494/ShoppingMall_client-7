@@ -30,10 +30,7 @@ const Header = () => {
       <HeaderContainer>
         <LogoBox>
           <Link to="/">
-            <img
-              src="https://global.mardimercredi.com/img/logo-red.png"
-              alt="LOGO"
-            />
+            <img src="images/logo.png" alt="LOGO" />
           </Link>
         </LogoBox>
         <HeaderNav>
