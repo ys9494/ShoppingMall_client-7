@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { CartWrapper, CartList, PayInfo } from "./styled";
-import CartItem from "./CartItem"
+import CartView from './CartView';
 import jwt_decode from "jwt-decode";
-const Cart = ({ cart, setCart }) => {
+const Cart = ({ count, setCount }) => {
+
+
   const token = localStorage.getItem("token");
   const decoded = jwt_decode(token);
   const { userId } = decoded;
-  const [carts, setCarts] = useState("");
+  const [carts, setCarts] = useState([]);
   let [price, setPrice] = useState(0);
-  let [count, setCount] = useState(0);
   let [total, setTotal] = useState(0);
+
   useEffect(() => {
     setCarts(JSON.parse(localStorage.getItem("cart")));
   }, [])
@@ -21,34 +23,52 @@ const Cart = ({ cart, setCart }) => {
     return carts.reduce((tot, el) =>
       tot + (el.price * el.quantity)
       , 0)
+
   }
+  // 상품 수
   const getTotalCount = () => {
     return carts.reduce((tot, el) =>
       tot + (el.quantity)
       , 0)
   }
 
-  // 상품 수
-
   useEffect(() => {
 
     carts && setPrice(getTotalPrice());
     carts && setCount(getTotalCount());
-    carts && setTotal(getTotalCount());
-
-    // console.log(count)
+    carts && setTotal(getTotalPrice() + 3500);
   }, [carts])
-  // const countAll = () => {
-  //   carts.forEach((el) => setCount(count += el.price))
-  // }
 
-  // { carts.forEach(function (el) { setCount(count += el.price) }) }
+  const handleComplete = index => {
+    setCarts(current => {
+      const newList = [...current];
 
+      newList[index].isCompleted = true;
+
+      return newList;
+    });
+  };
+  const handleRemove = index => {
+    setCarts(current => {
+      const newList = [...current];
+      newList.splice(index, 1);
+      localStorage.setItem("cart", JSON.stringify(newList))
+      return newList;
+    });
+  };
+  const handleRemoveAll = index => {
+
+    setCarts(current => {
+      const newList = [];
+
+      localStorage.setItem("cart", JSON.stringify(newList))
+      return newList;
+    });
+  };
 
   return (
     <>
       <CartWrapper>
-
 
         <div>
           <p>
@@ -57,18 +77,13 @@ const Cart = ({ cart, setCart }) => {
         </div>
         <div>
           <CartList>
-            <form>
-              <input type="checkbox" id="allcheck" />
-              <label htmlFor="allcheck">ALL</label>
-              <ul>
-                {carts && carts.map((item) =>
-                  (<CartItem key={item._id} {...item} />)
-                )}
-                {/* {carts && carts.map((item) =>
-                  console.log(item.price)
-                )} */}
-              </ul>
-            </form>
+            <CartView
+              carts={carts}
+              count={count}
+              setCount={setCount}
+              // onComplete={handleComplete}
+              onRemove={handleRemove}
+            />
           </CartList>
           <PayInfo>
             <div>
@@ -80,7 +95,7 @@ const Cart = ({ cart, setCart }) => {
               </ul>
               <p>총 결제금액{total}</p>
             </div>
-            {/* <button onClick={removeAll}>쇼핑백 비우기</button> */}
+            <button onClick={handleRemoveAll}>쇼핑백 비우기</button>
             <Link to={`http://localhost:3000/order/${userId}`} state={{
               total,
               price,
