@@ -123,7 +123,12 @@ const Product = ({ cart, setCart, count, setCount }) => {
 
                 <Counter handleQuantity={handleQuantity} object={object} product={product} />
                 <RadioBox options={size} />
-                <Button onClick={() => handleCart()}>쇼핑백 담기</Button>
+                <Button className="alert alert-primary" role="alert" onClick={() => {
+                  handleCart()
+                  alert("상품이 장바구니에 담겼습니다.")
+                }
+
+                }>쇼핑백 담기</Button>
                 <LinkStyle to={`/order/${userId}`} state={{
                   count,
                   total: product.price * object,
