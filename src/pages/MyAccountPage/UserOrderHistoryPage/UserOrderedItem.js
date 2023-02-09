@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   OrderedItemWrapper,
   ItemDetail,
@@ -11,12 +11,34 @@ import {
   OrderStatus,
 } from "./userordereditem-styled";
 import { timeFormat } from "../../../utils/utils";
-import { ROUTE } from "../../../routes/route";
+import * as API from "../../../utils/api";
 
 const UserOrderedItem = (item) => {
+  const [orderedItem, setOrderedItem] = useState(item);
+
+  const getOrderInfoAPI = async () => {
+    try {
+      const { data } = await API.get(`/order/product/${item._id}`);
+      console.log(item);
+      console.log("data", data);
+      const { productId, productQuantity, productSize, orderId } = data[0];
+      setOrderedItem({
+        ...item,
+        productId,
+        productQuantity,
+        productSize,
+        orderId,
+      });
+
+      console.log("item", orderedItem);
+    } catch (err) {
+      console.log("Err", err?.response?.data);
+    }
+  };
+
   useState(() => {
     if (item) {
-      console.log("item_item", item);
+      getOrderInfoAPI();
     }
   }, [item]);
 
@@ -28,38 +50,39 @@ const UserOrderedItem = (item) => {
 
   return (
     <OrderedItemWrapper>
-      {item && (
+      {orderedItem && (
         <ItemDetail>
           <OrderInfo>
-            <span>{item?.date && timeFormat(item?.date)} </span>
-            <span>({item?.orderId})</span>
+            <span>{orderedItem?.date && timeFormat(orderedItem?.date)} </span>
+            <span>({orderedItem?.orderNumber})</span>
           </OrderInfo>
           <ItemWrapper>
-            <Link to={`${ROUTE.PRODUCTDETAIL}/${item._id}`}>
+            <Link to={`/product/detail/${orderedItem?.productId}`}>
               <ItemImageWrapeer>
-                {item?.image && <img src={item.image} alt={item.title} />}
+                {orderedItem?.image && (
+                  <img src={orderedItem.image} alt={orderedItem.title} />
+                )}
               </ItemImageWrapeer>
             </Link>
             <ItemInfoWrapper>
               <ItemInfo>
-                <h3>{item?.title}</h3>
+                <h3>{orderedItem?.title}</h3>
                 <div>
-                  <p>KRW {Number(item?.price).toLocaleString("ko-KR")}</p>
-                  <p>QTY : {item?.qty}</p>
+                  <p>
+                    KRW{" "}
+                    {Number(orderedItem?.totalPrice).toLocaleString("ko-KR")}
+                  </p>
+                  {/* <p>QTY : {orderedItem?.productQuantity}</p> */}
                 </div>
               </ItemInfo>
               <OrderStatus>
-                <p>{item?.status}</p>
-                {item.option === "detailPage" ? (
-                  <button onClick={cancelOrder}>주문 취소</button>
-                ) : (
-                  <Link
-                    to={`${ROUTE.USERORDEREDDETAIL}/${item._id}`}
-                    state={item}
-                  >
-                    <span>주문 상세 &gt; </span>
-                  </Link>
-                )}
+                <p>{orderedItem?.status}</p>
+                <Link
+                  to={`/myaccount/order/detail/${item._id}`}
+                  state={orderedItem}
+                >
+                  <span>주문 상세 &gt; </span>
+                </Link>
               </OrderStatus>
             </ItemInfoWrapper>
           </ItemWrapper>

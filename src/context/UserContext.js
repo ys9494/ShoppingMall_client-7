@@ -1,18 +1,16 @@
 import React, { createContext, useContext, useReducer } from "react";
 
 const initialState = {
-  user: {
-    isLoggedIn: false,
-  },
+  isLoggedIn: false,
+  isAdmin: false,
 };
 
 const reducer = (state, action) => {
   switch (action.type) {
     case "LOGIN":
       return {
-        user: {
-          isLoggedIn: true,
-        },
+        isLoggedIn: true,
+        isAdmin: action.isAdmin,
       };
     case "LOGOUT":
       return {
@@ -40,12 +38,12 @@ export const UserProvider = ({ children }) => {
 
 export const useUserState = () => {
   const state = useContext(UserStateContext);
-  if (!state) throw new Error("Cannot find UserProvider");
+  if (!state) throw new Error("Cannot find UserStateProvider");
   return state;
 };
 
 export const useUserDispatch = () => {
   const dispatch = useContext(UserDispatchContext);
-  if (!dispatch) throw new Error("Cannot find UserProvider");
+  if (!dispatch) throw new Error("Cannot find UserDispatchProvider");
   return dispatch;
 };

@@ -12,7 +12,7 @@ import {
 import { useUserState, useUserDispatch } from "../context/UserContext";
 
 const Header = () => {
-  const { user } = useUserState();
+  const { isLoggedIn } = useUserState();
   const dispatch = useUserDispatch();
 
   const logoutSubmit = () => {
@@ -38,7 +38,7 @@ const Header = () => {
         </LogoBox>
         <HeaderNav>
           <ul>
-            {user?.isLoggedIn ? (
+            {isLoggedIn && isLoggedIn ? (
               <li onClick={logoutSubmit}>
                 <LinkStyle to="/">LOGOUT</LinkStyle>
               </li>

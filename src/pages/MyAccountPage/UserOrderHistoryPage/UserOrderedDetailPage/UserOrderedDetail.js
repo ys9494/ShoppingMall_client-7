@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import axios from "axios";
 import { LayoutWrapper } from "../../../../components/common-styled";
 import { TitleWrapper } from "../userorderhistory-styled";
 import {
@@ -10,7 +9,18 @@ import {
   InfoTitle,
   InfoDetail,
 } from "./userordereddetail-styled";
-import UserOrderedItem from "../UserOrderedItem";
+import {
+  ItemDetail,
+  ItemWrapper,
+  ItemImageWrapeer,
+  ItemInfoWrapper,
+  OrderInfo,
+  ItemInfo,
+  OrderStatus,
+} from "../userordereditem-styled";
+// import UserOrderedItem from "../UserOrderedItem";
+import { ROUTE } from "../../../../routes/route";
+import * as API from "../../../../utils/api";
 
 const dummy = [
   {
@@ -119,48 +129,62 @@ const dummy = [
 ];
 
 const UserOrderedDetail = () => {
-  const { id } = useParams();
+  const { orderId } = useParams();
   const [item, setItem] = useState({});
   const [products, setProducts] = useState([]);
   const [orderItem, setOrderItem] = useState([]);
 
+  const navigate = useNavigate();
   const location = useLocation();
 
-  const getProducts = async () => {
-    const orderId = "63e2a4239e40b325a36b3138";
-    try {
-      const response = await axios.get("http://localhost:8001/api/products/");
-      const products = response.data;
-
-      console.log("response1", products);
-
-      const response2 = await axios.get(
-        `http://localhost:8001/api/order/product/${orderId}`
-      );
-      const orderItemInfo = response2.data;
-
-      console.log("response2", orderItemInfo);
-    } catch (err) {
-      console.log("Error", err);
-    }
-  };
-
   useEffect(() => {
-    console.log("state", location.state);
+    if (!localStorage.getItem("token")) {
+      return navigate(ROUTE.LOGIN.link);
+    }
   }, []);
 
   useEffect(() => {
-    getProducts();
-    if (id) {
-      console.log("products", products);
-      console.log("id", id);
-      // const matchedItem = products?.find((item) => item._id == id);
-      setItem(products?.find((item) => item._id == id));
+    if (orderId) {
+      console.log(orderId);
     }
-    if (item) {
-      console.log("item", item);
-    }
-  }, [id, item]);
+  }, [orderId]);
+
+  // const getProducts = async () => {
+  //   const orderId = "63e2a4239e40b325a36b3138";
+  //   try {
+  //     const response = await axios.get("http://localhost:8001/api/products/");
+  //     const products = response.data;
+
+  //     console.log("response1", products);
+
+  //     const response2 = await axios.get(
+  //       `http://localhost:8001/api/order/product/${orderId}`
+  //     );
+  //     const orderItemInfo = response2.data;
+
+  //     console.log("response2", orderItemInfo);
+  //   } catch (err) {
+  //     console.log("Error", err);
+  //   }
+  // };
+
+  useEffect(() => {
+    const orderedItem = location.state;
+    console.log("state", orderedItem);
+  }, []);
+
+  // useEffect(() => {
+  //   getProducts();
+  //   if (id) {
+  //     console.log("products", products);
+  //     console.log("id", id);
+  //     // const matchedItem = products?.find((item) => item._id == id);
+  //     setItem(products?.find((item) => item._id == id));
+  //   }
+  //   if (item) {
+  //     console.log("item", item);
+  //   }
+  // }, [id, item]);
 
   return (
     <LayoutWrapper>
@@ -170,7 +194,40 @@ const UserOrderedDetail = () => {
         </TitleWrapper>
         {item && (
           <>
-            <UserOrderedItem option={"detailPage"} {...item} />
+            <ItemDetail>
+              <OrderInfo>
+                <span>
+                  {orderedItem?.date && timeFormat(orderedItem?.date)}{" "}
+                </span>
+                <span>({orderedItem?.orderNumber})</span>
+              </OrderInfo>
+              <ItemWrapper>
+                <Link to={`/myaccount/order`}>
+                  <ItemImageWrapeer>
+                    {orderedItem?.image && (
+                      <img src={orderedItem.image} alt={orderedItem.title} />
+                    )}
+                  </ItemImageWrapeer>
+                </Link>
+                <ItemInfoWrapper>
+                  <ItemInfo>
+                    <h3>{orderedItem?.title}</h3>
+                    <div>
+                      <p>
+                        KRW {Number(orderedItem?.price).toLocaleString("ko-KR")}
+                      </p>
+                      <p>QTY : {orderedItem?.productQuantity}</p>
+                    </div>
+                  </ItemInfo>
+                  <OrderStatus>
+                    <p>{orderedItem?.status}</p>
+                    <button onClick={cancelOrder}>주문 취소</button>
+                  </OrderStatus>
+                </ItemInfoWrapper>
+              </ItemWrapper>
+            </ItemDetail>
+
+            {/* <UserOrderedItem option={"detailPage"} {...item} /> */}
             <UserOrderInfo>
               <InfoTitle>
                 <h3>배송지 정보</h3>

@@ -89,8 +89,8 @@ export const ROUTE = {
     element: USERORDERHISTORY,
   },
   USERORDEREDDETAIL: {
-    path: "/myaccount/order/detail/:id",
-    link: "/myaccount/order/detail/",
+    path: "/myaccount/order/detail/:orderId",
+    link: "/myaccount/order/detail",
     element: UserOrderedDetail,
   },
   PRODUCTLIST: {

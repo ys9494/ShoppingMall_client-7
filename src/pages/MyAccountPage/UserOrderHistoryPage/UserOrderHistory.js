@@ -1,9 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { LayoutWrapper } from "../../../components/common-styled";
 import { OrderHistoryWrapper, TitleWrapper } from "./userorderhistory-styled";
 import UserOrderedItemList from "./UserOrderedItemList";
+import { useNavigate } from "react-router-dom";
+import { ROUTE } from "../../../routes/route";
 
 const UserOrderHistory = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!localStorage.getItem("token")) {
+      return navigate(ROUTE.LOGIN.link);
+    }
+  }, []);
+
   return (
     <LayoutWrapper>
       <OrderHistoryWrapper>

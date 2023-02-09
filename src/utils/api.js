@@ -1,10 +1,7 @@
 import axios from "axios";
 
-const serverUrl = "http://localhost:8001/api";
-
-// const backendPortNumber = "5001";
-// const serverUrl =
-//     "http://" + window.location.hostname + ":" + backendPortNumber + "/api/";
+// const serverUrl = "http://localhost:8001/api";
+const serverUrl = "http://kdt-ai6-team07.elicecoding.com/api";
 
 // endpoint : serverUrl 뒤에 오는 path
 // ex) 로그인일 때, endpoint는 '/login'
@@ -62,7 +59,6 @@ async function del(endpoint, params = "") {
   });
 }
 
-// 아래처럼 export한 후, import * as A 방식으로 가져오면,
-// A.get, A.post 로 쓸 수 있음.
-// 필요한 것만 가져오려면 import { get } from '경로' 방식으로 가져와서 사용
+// 아래처럼 export한 후, import * as API 방식으로 가져오면,
+// API.get, API.post 로 쓸 수 있음.
 export { get, post, patch, del as delete };
