@@ -16,7 +16,7 @@ import Productlist from "../pages/Productlistpage/Productlist";
 import Admin from "../pages/AdminPage/Admin";
 import UserOrderedDetail from "../pages/MyAccountPage/UserOrderHistoryPage/OrderedDetailPage/OrderedDetail";
 import Orderlist from "../pages/Orderlistpage/Orderlist";
-import OrderComplete from "../pages/OrderPage/OrderComplete/OrderComplete"; 
+import OrderComplete from "../pages/OrderPage/OrderComplete/OrderComplete";
 
 export const ROUTE = {
   HOME: {
@@ -79,7 +79,7 @@ export const ROUTE = {
     link: "/product/detail/:id",
     element: ProductDetail,
   },
-  CategoryManage: {
+  CATEGORYMANAGE: {
     path: "/admin/category/manage",
     link: "/admin/category/manage",
     element: CategoryManage,
@@ -114,9 +114,9 @@ export const ROUTE = {
     link: "/admin",
     element: Admin,
   },
-  Orderlist: {
-    path: "/orderlist",
-    link: "/orderlist",
+  ORDERLIST: {
+    path: "/order/list",
+    link: "/order/list",
     element: Orderlist,
   },
 };

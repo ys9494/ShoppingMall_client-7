@@ -1,5 +1,5 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { OrderedDetailItemWrapper } from "./ordereddetail-styled";
 import {
   ItemDetail,
@@ -10,34 +10,51 @@ import {
   ItemInfo,
   OrderStatus,
 } from "../ordereditem-styled";
+import * as API from "../../../../utils/api";
+import { ROUTE } from "../../../../routes/route";
 
-const OrderedDetailItem = () => {
+const OrderedDetailItem = ({ orderInfo, productItem }) => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log("orderInfo", orderInfo);
+    console.log("productItem", productItem);
+  }, []);
+
   return (
     <OrderedDetailItemWrapper>
       <ItemDetail>
         <OrderInfo>
-          <span>{orderedItem?.date && timeFormat(orderedItem?.date)} </span>
-          <span>({orderedItem?.orderNumber})</span>
+          <span>{orderInfo?.createdAt?.slice(0, 10)} </span>
+          {/* <span>({orderInfo?.orderNumber})</span> */}
         </OrderInfo>
         <ItemWrapper>
           <Link to={`/myaccount/order`}>
             <ItemImageWrapeer>
-              {orderedItem?.image && (
-                <img src={orderedItem.image} alt={orderedItem.title} />
+              {productItem?.productId?.imageUrl && (
+                <img
+                  src={productItem?.productId?.imageUrl}
+                  alt={productItem?.productId?.title}
+                />
               )}
             </ItemImageWrapeer>
           </Link>
           <ItemInfoWrapper>
             <ItemInfo>
-              <h3>{orderedItem?.title}</h3>
+              <h3>{productItem?.productId?.title}</h3>
               <div>
-                <p>KRW {Number(orderedItem?.price).toLocaleString("ko-KR")}</p>
-                <p>QTY : {orderedItem?.productQuantity}</p>
+                <p>
+                  KRW{" "}
+                  {productItem?.productId?.price &&
+                    Number(productItem?.productId?.price).toLocaleString(
+                      "ko-KR"
+                    )}
+                </p>
+                <p>QTY : {productItem?.productQuantity}</p>
               </div>
             </ItemInfo>
             <OrderStatus>
-              <p>{orderedItem?.status}</p>
-              <button onClick={cancelOrder}>주문 취소</button>
+              <p>{orderInfo?.status}</p>
             </OrderStatus>
           </ItemInfoWrapper>
         </ItemWrapper>

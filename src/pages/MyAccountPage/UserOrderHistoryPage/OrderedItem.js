@@ -14,70 +14,58 @@ import {
 import * as API from "../../../utils/api";
 
 const UserOrderedItem = (item) => {
-  const [orderedItem, setOrderedItem] = useState(item);
+  const [productInfo, setProductInfo] = useState([]);
 
-  const getOrderInfoAPI = async () => {
+  const getOrderInfoAPI = async (item) => {
     try {
-      const { data } = await API.get(`/order/product/${item._id}`);
-      const { productId, productQuantity, productSize, orderId } = data[0];
-      setOrderedItem({
-        ...item,
-        productId,
-        productQuantity,
-        productSize,
-        orderId,
-      });
-
-      console.log("orderedInfoitem", orderedItem);
+      const { data } = await API.get(`/order/product/${item.orderId}`);
+      setProductInfo([...data]);
     } catch (err) {
-      console.log("Err", err?.response?.data);
+      console.log("ErrProduct", err?.response?.data);
     }
   };
 
   useState(() => {
     if (item) {
-      getOrderInfoAPI();
+      getOrderInfoAPI(item);
     }
   }, [item]);
 
-  const cancelOrder = () => {
-    if (confirm("주문을 취소하시겠습니까?")) {
-      console.log("주문 취소 완료");
-    }
-  };
+  console.log("infooooooo", item);
 
   return (
     <OrderedItemWrapper>
-      {orderedItem && (
+      {item && productInfo.length > 0 && (
         <ItemDetail>
           <OrderInfo>
-            <span>{(orderedItem?.createdAt).slice(0, 10)} </span>
-            <span>({orderedItem?.orderNumber})</span>
+            <span>{item?.createdAt?.slice(0, 10)} </span>
+            <span>({item?.orderNumber})</span>
           </OrderInfo>
+
           <ItemWrapper>
-            <Link to={`/product/detail/${orderedItem?.productId}`}>
+            <Link to={`/product/detail/${productInfo[0]?.productId?._id}`}>
               <ItemImageWrapeer>
-                {orderedItem?.image && (
-                  <img src={orderedItem.image} alt={orderedItem.title} />
+                {productInfo[0]?.productId?.imageUrl && (
+                  <img
+                    src={productInfo[0]?.productId?.imageUrl}
+                    alt={productInfo[0]?.productId?.title}
+                  />
                 )}
               </ItemImageWrapeer>
             </Link>
             <ItemInfoWrapper>
               <ItemInfo>
-                <h3>{orderedItem?.title}</h3>
+                <h3>{productInfo[0]?.productId?.title}</h3>
                 <div>
-                  <p>
-                    KRW{" "}
-                    {Number(orderedItem?.totalPrice).toLocaleString("ko-KR")}
-                  </p>
-                  <p>QTY : {orderedItem?.productQuantity}</p>
+                  <p>KRW {Number(item?.totalPrice).toLocaleString("ko-KR")}</p>
+                  <p>QTY : {productInfo[0]?.productQuantity}</p>
                 </div>
               </ItemInfo>
               <OrderStatus>
-                <p>{orderedItem?.status}</p>
+                <p>{item?.status}</p>
                 <Link
-                  to={`/myaccount/order/detail/${orderedItem._id}`}
-                  state={orderedItem}
+                  to={`/myaccount/order/detail/${item?.orderId}`}
+                  state={{ item, productInfo }}
                 >
                   <span>주문 상세 &gt; </span>
                 </Link>

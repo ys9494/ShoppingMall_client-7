@@ -19,7 +19,6 @@ const itemList = ({ carts, setCarts, onComplete, onRemove, setQuantity }) => {
                 <span>수량:{item.quantity}</span>
                 <br></br>
                 <Button
-                  variant="primary"
                   onClick={() =>
                     setQuantity("plus", item._id, item.quantity + 1)
                   }

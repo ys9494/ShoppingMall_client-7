@@ -30,7 +30,7 @@ const Header = () => {
       <HeaderContainer>
         <LogoBox>
           <Link to="/">
-            <img src={process.env.PUBLIC_URL + "/img/logo.png"} alt="LOGO" />
+            <img src={process.env.PUBLIC_URL + "/img/logo7.png"} alt="LOGO" />
           </Link>
         </LogoBox>
         <HeaderNav>

@@ -157,7 +157,7 @@ const Cart = ({ count, setCount }) => {
             >
               쇼핑백 비우기
             </button>
-            <Button className="btn btn-outline-primary mb-3">
+            <Button>
               <Link
                 to="/order"
                 state={{
