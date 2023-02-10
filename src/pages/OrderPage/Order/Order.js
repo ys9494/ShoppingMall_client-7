@@ -28,7 +28,7 @@ const Order = () => {
   const inputAddress2 = useRef();
   const inputZipcode = useRef();
 
-  console.log(count, total, product, productId, productSize);
+  // console.log(count, total, product, productId, productSize);
 
   const orderHandler = async () => {
     try {
@@ -216,9 +216,9 @@ const Order = () => {
                 총 결제금액 <span>{productPrice + 3000}원</span>
               </p>
 
-              <p>
+              {/* <p>
                 총 결제금액 <span>{total}원</span>
-              </p>
+              </p> */}
             </div>
             {orderInfo && products ? (
               <button onClick={editOrderHandler}>배송지 정보 변경</button>

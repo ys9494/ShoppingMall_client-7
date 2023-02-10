@@ -11,7 +11,7 @@ import {
 } from "./ordereddetail-styled";
 import { ROUTE } from "../../../../routes/route";
 import { phoneNumberFormat } from "../../../../utils/utils";
-
+import * as API from "../../../../utils/api";
 import OrderedDetailItem from "./OrderedDetailItem";
 
 const OrderedDetail = () => {
@@ -37,6 +37,8 @@ const OrderedDetail = () => {
   const cancelOrderAPI = async (orderId) => {
     try {
       await API.delete(`/order/${orderId}`);
+      console.log("주문 취소", orderInfo?.orderId);
+      navigate("/myaccount/order", { replace: true });
     } catch (err) {
       console.log("Err", err);
     }
@@ -45,9 +47,7 @@ const OrderedDetail = () => {
   /** 주문 취소 */
   const cancelOrder = () => {
     if (confirm("주문을 취소하시겠습니까?")) {
-      productItem && cancelOrderAPI(productItem.orderId);
-      console.log("주문 취소", productItem?.orderId);
-      navigate(ROUTE.USERORDERHISTORY.link, { replace: true });
+      orderInfo && cancelOrderAPI(orderInfo.orderId);
     }
   };
 
@@ -74,10 +74,12 @@ const OrderedDetail = () => {
             <h3>배송지 정보</h3>
             {orderInfo?.status === "결제 완료" ||
             orderInfo?.status === "배송 준비" ? (
-              <Link to={`/order`} state={{ orderInfo, products }}>
-                <button>배송지 변경</button>
+              <>
+                <Link to={`/order`} state={{ orderInfo, products }}>
+                  <button>배송지 변경</button>
+                </Link>
                 <button onClick={cancelOrder}>주문 취소</button>
-              </Link>
+              </>
             ) : null}
           </InfoTitle>
           {orderInfo && (

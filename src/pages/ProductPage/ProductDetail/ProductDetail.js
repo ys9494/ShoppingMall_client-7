@@ -76,11 +76,6 @@ const Product = ({ count, setCount }) => {
         ...carts.slice(idx + 1),
       ])
     );
-
-    localStorage.setItem(
-      "cart",
-      JSON.stringify([...cart.slice(0, idx), cartItem, ...cart.slice(idx + 1)])
-    );
   };
 
   // cart에 추가
