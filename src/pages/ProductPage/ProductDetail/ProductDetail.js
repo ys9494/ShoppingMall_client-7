@@ -94,11 +94,14 @@ const Product = ({ cart, setCart, count, setCount }) => {
     }
     //기존 카트는 유지하고 카트 item 추가
 
-    console.log(cart)
   }
 
-  const size = { type: "size", option: ["small", "medium", "large", "xlarge", "xxlarge"] };
-
+  const size = { type: "size", option: ["small", "medium", "large", "xlarge", "xxlarge"], dbOption : ["sizeS", "sizeM", "sizeL", "sizeXL", "size2XL"] };
+  const [sizeData, setSizeData] = useState('');
+  const radioValue = (text) => {
+    setSizeData(text);
+    console.log(sizeData);
+  }
   return (
     product && (
       <>
@@ -117,8 +120,8 @@ const Product = ({ cart, setCart, count, setCount }) => {
               </div>
               <div>
                 <Counter handleQuantity={handleQuantity} object={object} product={product} />
-                <RadioBox options={size} />
-                <Button className="alert alert-primary" role="alert" onClick={() => {
+                <RadioBox options={size} radioProps={radioValue} />
+                <Button onClick={() => {
                   handleCart()
                   alert("상품이 장바구니에 담겼습니다.")
                 }
@@ -127,7 +130,9 @@ const Product = ({ cart, setCart, count, setCount }) => {
                 <LinkStyle to={"/order"} state={{
                   count,
                   total: product.price * object,
-                  product: product.title
+                  product: product.title,
+                  productId: product._id,
+                  productSize: sizeData,
                 }}>구매하기</LinkStyle>
               </div>
 

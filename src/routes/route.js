@@ -16,6 +16,7 @@ import Productlist from "../pages/Productlistpage/Productlist";
 import Admin from "../pages/AdminPage/Admin";
 import UserOrderedDetail from "../pages/MyAccountPage/UserOrderHistoryPage/UserOrderedDetailPage/UserOrderedDetail";
 import Orderlist from "../pages/Orderlistpage/Orderlist";
+import OrderComplete from "../pages/OrderPage/OrderComplete/OrderComplete"; 
 
 export const ROUTE = {
   HOME: {
@@ -57,6 +58,11 @@ export const ROUTE = {
     path: "/order",
     link: "/order",
     element: Order,
+  },
+  ORDERCOMPELETE: {
+    path: "/order/complete",
+    link: "/order/complete",
+    element: OrderComplete,
   },
   PRODUCTALL: {
     path: "/product",
