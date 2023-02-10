@@ -16,13 +16,15 @@ const Order = () => {
   const navigator = useNavigate();
   let token = localStorage.getItem("token");
 
+  console.log(count, total, product, productId, productSize);
+
   const orderHandler = async () => {
     try {
       const decoded = jwt_decode(token);
       const { userId } = decoded;
       const data = {
         userId,
-        "totalPrice": total + 3000,
+        "totalPrice": total,
         "consignee": inputName.current.value,
         "address1": inputAddress.current.value,
         "address2": inputAddress2.current.value,
@@ -35,7 +37,7 @@ const Order = () => {
       const odData = {
         "orderId": orderData._id,
         "productId": productId,
-        "productQuantity": 1,
+        "productQuantity": count,
         "productSize": productSize,
         "_id": userId,
       }
@@ -46,7 +48,7 @@ const Order = () => {
 
       navigator("/order/complete");
     } catch(err) {
-      console.log(total, product, productId, productSize)
+      console.log(total, product, productId, productSize);
       console.log(err);
     }
   }
@@ -95,12 +97,8 @@ const Order = () => {
                   상품 금액
                   <span> {total}원</span>
                 </li>
-                <li>
-                  배송비
-                  <span> 3000원</span>
-                </li>
               </ul>
-              <p>총 결제금액 <span>{total + 3000}원</span></p>
+              <p>총 결제금액 <span>{total}원</span></p>
             </div>
             <button onClick={orderHandler}>주문 하기</button>
           </PayInfo>
