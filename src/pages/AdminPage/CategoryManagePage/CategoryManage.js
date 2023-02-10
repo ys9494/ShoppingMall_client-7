@@ -1,15 +1,10 @@
-import axios from "axios";
-import React, { useEffect, useState, useRef } from 'react';
-import { CategoryWrapper } from "./styled";
+import React, { useEffect, useRef, useState } from 'react';
 import * as API from "../../../utils/api";
+import { CategoryWrapper } from "./styled";
 
 const CategoryManage = () => {
   const [categoryList, setCategoryList] = useState([]);
-  const [flag, setFlag] = useState(true);
-  const [value, setValue] = useState('');
   const addInput = useRef();
-  const anyInput = useRef([]);
-  const token = localStorage.getItem("token");
   
   useEffect(() => {
     (async () => {
@@ -32,35 +27,21 @@ const CategoryManage = () => {
       );
       const category = response.data;
       setCategoryList(current => [...current, category]);
+      addInput.current.value = '';
     } catch(err) {
       console.log(err);
       alert("해당 카테고리가 존재합니다.");
     }
   }
   const categoryUpdateHandler = async (id, idx) => {
-    const current = anyInput.current;
-    if(flag) {
-      current[idx].disabled = false;
-      current[idx].focus();
-      setFlag(!flag);
-    } else {
+    const inputTitle = categoryList.find((item, index) => idx === index);
       try {
         await API.patch(`/categories/${id}`,
-          {title: current[idx].value},
+          {title: inputTitle.title},
         );
-        current[idx].disabled = true;
-        setFlag(!flag);
       } catch(err) {
         console.log(err);
       }
-    }
-    console.log(current, flag);
-    // const disabled = current.findIndex(ref => ref.disabled === false);
-    // current[disabled].disabled = true;
-    
-    // console.log(disabled);
-    
-    
   }
   const categoryDeleteHandler = async (id) => {
     try {
@@ -72,10 +53,9 @@ const CategoryManage = () => {
     }
   }
 
-  const onChange = (e) => {
-    setValue((prevState) => {
-      return [...prevState, e.target.value];
-    });
+  const onChange = (e, idx) => {
+    setCategoryList(current => current.map((item, index) => 
+      index === idx ? ({...item, title: e.target.value}) : item ));
   }
 
   return (
@@ -102,7 +82,11 @@ const CategoryManage = () => {
                 categoryList.map((category, idx) => {
                   return (
                     <li key={idx}>
-                      <input type="text" value={category.title} disabled ref={(e) => (anyInput.current[idx] = e)} onChange={onChange} />
+                      <input
+                        type="text"
+                        name={category.title}
+                        value={category.title}
+                        onChange={(e) => onChange(e, idx)} />
                       <button onClick={(e) => {
                         e.preventDefault();
                         categoryUpdateHandler(category._id, idx);

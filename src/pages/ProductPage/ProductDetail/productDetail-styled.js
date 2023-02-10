@@ -96,7 +96,7 @@ export const Button = styled.button`
   }
 `;
 
-export const LinkStyle = styled(Link)`
+export const Button2 = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;

@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 
-const itemList = ({ carts, setCarts, onComplete, onRemove, setQuantity }) => {
+const cartList = ({ cartList, onRemove, setQuantity }) => {
   return (
     <div>
       <ol>
-        {carts &&
-          carts.map((item, index) => {
+        {cartList &&
+          cartList.map((item, index) => {
             return (
               <li key={index} className={item.isCompleted ? "complete" : ""}>
                 <img src={item.imageUrl} alt="Product" />
@@ -15,20 +15,20 @@ const itemList = ({ carts, setCarts, onComplete, onRemove, setQuantity }) => {
                   <p>₩{item.price}</p>
                   <p>{item.manufacturer}</p>
                 </div>
-
                 <span>수량:{item.quantity}</span>
                 <br></br>
                 <Button
-                  onClick={() =>
-                    setQuantity("plus", item._id, item.quantity + 1)
-                  }
+                  variant="primary"
+                  onClick={() => {
+                    setQuantity("plus", item._id, item.quantity + 1);
+                  }}
                 >
                   +
                 </Button>
                 <Button
-                  onClick={() =>
-                    setQuantity("minus", item._id, item.quantity - 1)
-                  }
+                  onClick={() => {
+                    setQuantity("minus", item._id, item.quantity - 1);
+                  }}
                 >
                   -
                 </Button>
@@ -38,6 +38,7 @@ const itemList = ({ carts, setCarts, onComplete, onRemove, setQuantity }) => {
                     onRemove(index);
                   }}
                 >
+                  {" "}
                   삭제
                 </Button>
               </li>
@@ -48,4 +49,4 @@ const itemList = ({ carts, setCarts, onComplete, onRemove, setQuantity }) => {
   );
 };
 
-export default itemList;
+export default cartList;

@@ -7,19 +7,21 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Button } from "react-bootstrap";
 
 const Cart = ({ count, setCount }) => {
-  const [carts, setCarts] = useState([]);
   const [price, setPrice] = useState(0);
   const [total, setTotal] = useState(0);
   const [delivery, setDelivery] = useState(0);
+  const [cartList, setCartList] = useState([]);
+
+  // 로컬스토리지의 cart 불러옴
   useEffect(() => {
-    setCarts(JSON.parse(localStorage.getItem("cart")));
+    setCartList(JSON.parse(localStorage.getItem("cart")));
   }, []);
 
-  const setQuantity = (type, id, quantity) => {
+  // 장바구니 수량 버튼에 적용할 함수
+  const setQuantity = (type, _id, quantity) => {
     if (type === "plus") {
-      console.log(quantity);
-      const found = carts.filter((item) => item._id === id)[0];
-      const idx = carts.indexOf(found);
+      const found = cartList.filter((item) => item._id === _id)[0];
+      const idx = cartList.indexOf(found);
       const cartItem = {
         _id: found._id,
         imageUrl: found.imageUrl,
@@ -28,19 +30,27 @@ const Cart = ({ count, setCount }) => {
         manufacturer: found.manufacturer,
         quantity: quantity,
       };
-      setCarts([...carts.slice(0, idx), cartItem, ...carts.slice(idx + 1)]);
+
+      setCartList([
+        ...cartList.slice(0, idx),
+        cartItem,
+        ...cartList.slice(idx + 1),
+      ]);
       localStorage.setItem(
         "cart",
         JSON.stringify([
-          ...carts.slice(0, idx),
+          ...cartList.slice(0, idx),
           cartItem,
-          ...carts.slice(idx + 1),
+          ...cartList.slice(idx + 1),
         ])
       );
     } else {
       if (quantity === 0) return;
-      const found = carts.filter((item) => item._id === id)[0];
-      const idx = carts.indexOf(found);
+
+      // 장바구니에 있는 상품
+      const found = cartList.filter((item) => item._id === _id)[0];
+      cartList.length;
+      const idx = cartList.indexOf(found);
       const cartItem = {
         _id: found._id,
         imageUrl: found.imageUrl,
@@ -49,13 +59,18 @@ const Cart = ({ count, setCount }) => {
         manufacturer: found.manufacturer,
         quantity: quantity,
       };
-      setCarts([...carts.slice(0, idx), cartItem, ...carts.slice(idx - 1)]);
+
+      setCartList([
+        ...cartList.slice(0, idx),
+        cartItem,
+        ...cartList.slice(idx + 1),
+      ]);
       localStorage.setItem(
         "cart",
         JSON.stringify([
-          ...carts.slice(0, idx),
+          ...cartList.slice(0, idx),
           cartItem,
-          ...carts.slice(idx + 1),
+          ...cartList.slice(idx + 1),
         ])
       );
     }
@@ -63,57 +78,38 @@ const Cart = ({ count, setCount }) => {
 
   // 총 가격
   const getTotalPrice = () => {
-    return carts.reduce((tot, el) => tot + el.price * el.quantity, 0);
+    return cartList.reduce((tot, el) => tot + el.price * el.quantity, 0);
   };
-
   // 상품 수
   const getTotalCount = () => {
-    return carts.reduce((tot, el) => tot + el.quantity, 0);
+    return cartList.reduce((tot, el) => tot + el.quantity, 0);
   };
 
   useEffect(() => {
-    carts && setPrice(getTotalPrice());
-    carts && setCount(getTotalCount());
+    cartList && setPrice(getTotalPrice());
+    cartList && setCount(getTotalCount());
+    cartList && setTotal(getTotalPrice());
+  }, [cartList]);
 
-    carts && setTotal(getTotalPrice());
-  }, [carts]);
-
-  const handleComplete = (index) => {
-    setCarts((current) => {
-      const newList = [...current];
-
-      newList[index].isCompleted = true;
-
-      return newList;
-    });
-  };
+  // 장바구니 부분삭제
   const handleRemove = (index) => {
-    setCarts((current) => {
+    setCartList((current) => {
       const newList = [...current];
       newList.splice(index, 1);
       localStorage.setItem("cart", JSON.stringify(newList));
       return newList;
     });
   };
+
+  // 장바구니 전체삭제
   const handleRemoveAll = (index) => {
-    setCarts((current) => {
+    setCartList((current) => {
       const newList = [];
 
       localStorage.setItem("cart", JSON.stringify(newList));
       return newList;
     });
   };
-
-  function Component({ setDelivery, total, delivery }) {
-    if (total < 200000) {
-      setDelivery(3500);
-      return <p>배송금액: {delivery} 원</p>;
-    } else {
-      setDelivery(0);
-
-      return <p>배송금액: {delivery} 원</p>;
-    }
-  }
 
   return (
     <>
@@ -127,10 +123,9 @@ const Cart = ({ count, setCount }) => {
           <CartList>
             <CartView
               setQuantity={setQuantity}
-              carts={carts}
-              setCarts={setCarts}
-              // onComplete={handleComplete}
               onRemove={handleRemove}
+              cartList={cartList}
+              setCartList={setCartList}
             />
           </CartList>
           <PayInfo>
@@ -138,12 +133,6 @@ const Cart = ({ count, setCount }) => {
               <p>결제정보</p>
               <ul>
                 <li>총 상품개수 {Number(count).toLocaleString("ko-KR")} 개 </li>
-                {/* <li>상품 금액 {Number(total).toLocaleString("ko-KR")}</li> */}
-                <Component
-                  setDelivery={setDelivery}
-                  total={total}
-                  delivery={delivery}
-                />
               </ul>
               <p>
                 총 결제금액 {Number(total + delivery).toLocaleString("ko-KR")}{" "}

@@ -1,19 +1,23 @@
-import { faCartShopping, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faCartShopping, faUnlockKeyhole, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   HeaderContainer,
   HeaderNav,
   LinkStyle,
-  LogoBox,
+  LogoBox
 } from "./header-styled";
 
-import { useUserState, useUserDispatch } from "../context/UserContext";
+import { useUserDispatch, useUserState } from "../context/UserContext";
+import { getIsAdmin } from "../utils/utils";
 
 const Header = () => {
   const { isLoggedIn } = useUserState();
   const dispatch = useUserDispatch();
+  const isAdmin = getIsAdmin();
+  // console.log(isAdmin);
+  
 
   const logoutSubmit = () => {
     if (confirm("로그아웃 하시겠습니까?")) {
@@ -35,6 +39,13 @@ const Header = () => {
         </LogoBox>
         <HeaderNav>
           <ul>
+            {isAdmin && (
+              <li>
+                <LinkStyle to="/admin">
+                  <FontAwesomeIcon icon={faUnlockKeyhole} />
+                </LinkStyle>
+              </li>
+            )}
             {isLoggedIn && isLoggedIn ? (
               <li onClick={logoutSubmit}>
                 <LinkStyle to="/">LOGOUT</LinkStyle>

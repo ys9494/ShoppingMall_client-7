@@ -1,19 +1,18 @@
-import axios from "axios";
-import React, { useEffect, useState, useRef } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import * as API from "../../../utils/api";
 import Counter from "./Counter";
 import {
   Button,
+  Button2,
   ProductDetailWrapper,
   ProductImg,
   ProductInfo,
-  LinkStyle,
 } from "./productDetail-styled";
 import RadioBox from "./RadioBox";
 
-import * as API from "../../../utils/api";
-
-const Product = ({ cart, setCart, count, setCount }) => {
+const Product = ({ count, setCount }) => {
+  const [carts, setCarts] = useState([]);
   const { id } = useParams();
 
   const [object, setObject] = useState(1);
@@ -32,6 +31,10 @@ const Product = ({ cart, setCart, count, setCount }) => {
   useEffect(() => {
     getProductAPI();
   }, [id]);
+
+  useEffect(() => {
+    setCarts(JSON.parse(localStorage.getItem("cart")));
+  }, []);
 
   // 제품 수량 카운팅
   const handleQuantity = (quantity) => {
@@ -52,8 +55,8 @@ const Product = ({ cart, setCart, count, setCount }) => {
   // 장바구니 중복 체크
 
   const setQuantity = (id, quantity) => {
-    const found = cart.filter((el) => el._id === id)[0];
-    const idx = cart.indexOf(found);
+    const found = carts.filter((el) => el._id === id)[0];
+    const idx = carts.indexOf(found);
     const cartItem = {
       _id: product._id,
       imageUrl: product.imageUrl,
@@ -64,7 +67,15 @@ const Product = ({ cart, setCart, count, setCount }) => {
     };
 
     // 값만 수정된 새로운 배열 리턴
-    setCart([...cart.slice(0, idx), cartItem, ...cart.slice(idx + 1)]);
+    setCarts([...carts.slice(0, idx), cartItem, ...carts.slice(idx + 1)]);
+    localStorage.setItem(
+      "cart",
+      JSON.stringify([
+        ...carts.slice(0, idx),
+        cartItem,
+        ...carts.slice(idx + 1),
+      ])
+    );
 
     localStorage.setItem(
       "cart",
@@ -85,26 +96,88 @@ const Product = ({ cart, setCart, count, setCount }) => {
     };
 
     // found가 있으면 중복된 물건
-    const found = cart.find((el) => el._id === cartItem._id);
+    const found = carts.find((el) => el._id === cartItem._id);
 
     // found.quantity+ count는 기존 db의 수량과 장바구니 클릭을 통해 추가된 수량
     if (found) setQuantity(cartItem._id, found.quantity + object);
     else if (!found) {
-      setCart([...cart, cartItem]);
-      localStorage.setItem("cart", JSON.stringify([...cart, cartItem]));
+      setCarts([...carts, cartItem]);
+      localStorage.setItem("cart", JSON.stringify([...carts, cartItem]));
     }
     //기존 카트는 유지하고 카트 item 추가
   };
 
-  const size = {
-    type: "size",
-    option: ["small", "medium", "large", "xlarge", "xxlarge"],
-    dbOption: ["sizeS", "sizeM", "sizeL", "sizeXL", "size2XL"],
+  const [options, setOptions] = useState([
+    {
+      label: "small",
+      value: "sizeS",
+      BackgroundColor: "red",
+      checked: false,
+    },
+    {
+      label: "medium",
+      value: "sizeM",
+      BackgroundColor: "red",
+      checked: false,
+    },
+    {
+      label: "large",
+      value: "sizeL",
+      BackgroundColor: "red",
+      checked: false,
+    },
+    {
+      label: "xlarge",
+      value: "sizeXL",
+      BackgroundColor: "red",
+      checked: false,
+    },
+    {
+      label: "xxlarge",
+      value: "size2XL",
+      BackgroundColor: "red",
+      checked: false,
+    },
+  ]);
+
+  const handleRadioChange = (idx) => {
+    setOptions((current) =>
+      current.map((item, index) =>
+        index === idx ? { ...item, checked: true } : { ...item, checked: false }
+      )
+    );
   };
-  const [sizeData, setSizeData] = useState("");
-  const radioValue = (text) => {
-    setSizeData(text);
-    console.log(sizeData);
+  const navigate = useNavigate();
+  const userCheck = () => {
+    console.log(
+      count,
+      product.price,
+      product.title,
+      product._id,
+      options.filter((size) => size.checked === true)
+    );
+    if (options.filter((size) => size.checked === true).length === 0)
+      alert("사이즈를 선택해주세요");
+    try {
+      const token = localStorage.getItem("token");
+      if (token) {
+        navigate("/order", {
+          state: {
+            count: object,
+            total: product.price * object,
+            product: product.title,
+            productId: product._id,
+            productSize: options.filter((size) => size.checked === true)[0]
+              .value,
+          },
+        });
+      } else {
+        alert("회원 전용 서비스입니다.");
+        navigate("/login");
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -126,7 +199,7 @@ const Product = ({ cart, setCart, count, setCount }) => {
                   object={object}
                   product={product}
                 />
-                <RadioBox options={size} radioProps={radioValue} />
+                <RadioBox options={options} radioProps={handleRadioChange} />
                 <Button
                   onClick={() => {
                     handleCart();
@@ -135,18 +208,7 @@ const Product = ({ cart, setCart, count, setCount }) => {
                 >
                   쇼핑백 담기
                 </Button>
-                <LinkStyle
-                  to={"/order"}
-                  state={{
-                    count,
-                    total: product.price * object,
-                    product: product.title,
-                    productId: product._id,
-                    productSize: sizeData,
-                  }}
-                >
-                  구매하기
-                </LinkStyle>
+                <Button2 onClick={userCheck}>구매하기</Button2>
               </div>
 
               <div>
