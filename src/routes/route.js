@@ -15,6 +15,7 @@ import OrderHistory from "../pages/MyAccountPage/OrderHistoryPage/OrderHistory";
 import Productlist from "../pages/Productlistpage/Productlist";
 import Admin from "../pages/AdminPage/Admin";
 import Orderlist from "../pages/Orderlistpage/Orderlist";
+import OrderComplete from "../pages/OrderPage/OrderComplete/OrderComplete"; 
 
 export const ROUTE = {
   HOME: {
@@ -53,9 +54,14 @@ export const ROUTE = {
     element: Productedit,
   },
   ORDER: {
-    path: "/order/:id",
-    link: "/order/:id",
+    path: "/order",
+    link: "/order",
     element: Order,
+  },
+  ORDERCOMPELETE: {
+    path: "/order/complete",
+    link: "/order/complete",
+    element: OrderComplete,
   },
   PRODUCTALL: {
     path: "/product",

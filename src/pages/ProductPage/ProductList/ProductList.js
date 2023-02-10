@@ -21,12 +21,6 @@ const Product = () => {
 
   }, [])
 
-
-
-
-
-
-
   const imgError = (e) => e.target.src = "https://kuku-keke.com/wp-content/uploads/2020/04/2491_6.png";
 
   useEffect(() => {

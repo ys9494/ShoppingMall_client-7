@@ -10,17 +10,11 @@ const Nav = () => {
         const response = await axios.get("http://localhost:8001/api/categories");
         const category = response.data;
         setCategories(category);
-        console.log(category);
       } catch (err) {
         console.log(err);
       }
     })();
   }, [])
-
-
-
-
-
 
   return (
     <>
@@ -29,13 +23,15 @@ const Nav = () => {
             <li><LinkStyle to="/product/all">전체 상품</LinkStyle></li>
             {
               categories.map(category => {
-                return (
-                  <li key={category._id}>
-                    <LinkStyle to={`/product/${category._id}`}>
-                      {category.title}
-                    </LinkStyle>
-                  </li>
-                )
+                if(!category[1]) {
+                  return (
+                    <li key={category[0]._id}>
+                      <LinkStyle to={`/product/${category[0]._id}`}>
+                        {category[0].title}
+                      </LinkStyle>
+                    </li>
+                  )
+                }
               })
             }
           </ul>
