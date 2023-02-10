@@ -7,8 +7,12 @@ export const timeFormat = (time) => {
 };
 
 export const getUserId = () => {
-  const token = localStorage.getItem("token");
-  const decoded = jwt_decode(token);
-  const { userId } = decoded;
-  return userId;
+  try {
+    const token = localStorage.getItem("token");
+    const decoded = jwt_decode(token);
+    const { userId } = decoded;
+    return userId;
+  } catch (err) {
+    console.log("Error", err)
+  }
 };
