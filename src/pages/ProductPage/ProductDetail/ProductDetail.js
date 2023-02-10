@@ -1,14 +1,13 @@
-import axios from 'axios';
-import React, { useEffect, useState, useRef } from "react";
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from 'react-router-dom';
+import * as API from "../../../utils/api";
 import Counter from "./Counter";
 import {
-  Button, ProductDetailWrapper,
+  Button, Button2, ProductDetailWrapper,
   ProductImg,
-  ProductInfo, LinkStyle
+  ProductInfo
 } from "./productDetail-styled";
 import RadioBox from "./RadioBox";
-import * as API from "../../../utils/api"
 
 const Product = ({ count, setCount }) => {
   const [carts, setCarts] = useState([]);
@@ -25,7 +24,6 @@ const Product = ({ count, setCount }) => {
           data.data.find((product) => product._id == id)
         )
       })
-
     } catch (err) {
       console.log("Err", err);
     }
@@ -101,8 +99,61 @@ const Product = ({ count, setCount }) => {
     //기존 카트는 유지하고 카트 item 추가
 
   }
-
-  const size = { type: "size", option: ["small", "medium", "large", "xlarge", "xxlarge"] };
+  const [options, setOptions] = useState([
+    {
+        label: 'small',
+        value: 'sizeS',
+        BackgroundColor: 'red',
+        checked: false,
+    },
+    {
+        label: 'medium',
+        value: 'sizeM',
+        BackgroundColor: 'red',
+        checked: false,
+    },   {
+        label: 'large',
+        value: 'sizeL',
+        BackgroundColor: 'red',
+        checked: false,
+    },   {
+        label: 'xlarge',
+        value: 'sizeXL',
+        BackgroundColor: 'red',
+        checked: false,
+    },   {
+        label: 'xxlarge',
+        value: 'size2XL',
+        BackgroundColor: 'red',
+        checked: false,
+    },
+  ]);
+  const handleRadioChange = (idx) => {
+    setOptions(current => current.map((item, index) => 
+      index === idx ? ({...item, checked: true}) : ({...item, checked: false})));
+  }
+  const navigate = useNavigate();
+  const userCheck = () => {
+    console.log(count, product.price, product.title, product._id, options.filter(size => size.checked === true));
+    if(options.filter(size => size.checked === true).length === 0) alert("사이즈를 선택해주세요");
+    try {
+      const token = localStorage.getItem("token");
+      if(token) {
+        navigate('/order', {state: {
+          count: object,
+          total: product.price * object,
+          product: product.title,
+          productId: product._id,
+          productSize: options.filter(size => size.checked === true)[0].value,
+        }});
+      } else {
+        alert('회원 전용 서비스입니다.')
+        navigate('/login');
+      }
+    } catch(err) {
+      console.log(err);
+    }
+  }
 
   return (
     product && (
@@ -122,20 +173,14 @@ const Product = ({ count, setCount }) => {
               </div>
               <div>
                 <Counter handleQuantity={handleQuantity} object={object} product={product} />
-                <RadioBox options={size} radioProps={radioValue} />
+                <RadioBox options={options} radioProps={handleRadioChange} />
                 <Button onClick={() => {
                   handleCart()
                   alert("상품이 장바구니에 담겼습니다.")
                 }
 
                 }>쇼핑백 담기</Button>
-                <LinkStyle to={"/order"} state={{
-                  count,
-                  total: product.price * object,
-                  product: product.title,
-                  productId: product._id,
-                  productSize: sizeData,
-                }}>구매하기</LinkStyle>
+                <Button2 onClick={userCheck}>구매하기</Button2>
               </div>
 
               <div>
