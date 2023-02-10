@@ -10,11 +10,12 @@ import {
 import RadioBox from "./RadioBox";
 import * as API from "../../../utils/api"
 
-const Product = ({ cart, setCart, count, setCount }) => {
-
+const Product = ({ count, setCount }) => {
+  const [carts, setCarts] = useState([]);
   const { id } = useParams();
   const [object, setObject] = useState(1)
   const [product, setProduct] = useState({})
+
 
 
   const getProductAPI = async () => {
@@ -30,9 +31,14 @@ const Product = ({ cart, setCart, count, setCount }) => {
     }
   }
 
+
   useEffect(() => {
     getProductAPI()
   }, [id])
+
+  useEffect(() => {
+    setCarts(JSON.parse(localStorage.getItem("cart")));
+  }, [])
 
 
 
@@ -54,8 +60,8 @@ const Product = ({ cart, setCart, count, setCount }) => {
   // 장바구니 중복 체크
 
   const setQuantity = (id, quantity) => {
-    const found = cart.filter((el) => el._id === id)[0];
-    const idx = cart.indexOf(found);
+    const found = carts.filter((el) => el._id === id)[0];
+    const idx = carts.indexOf(found);
     const cartItem = {
       _id: product._id,
       imageUrl: product.imageUrl,
@@ -66,8 +72,8 @@ const Product = ({ cart, setCart, count, setCount }) => {
     };
 
     // 값만 수정된 새로운 배열 리턴
-    setCart([...cart.slice(0, idx), cartItem, ...cart.slice(idx + 1)]);
-    localStorage.setItem("cart", JSON.stringify([...cart.slice(0, idx), cartItem, ...cart.slice(idx + 1)]))
+    setCarts([...carts.slice(0, idx), cartItem, ...carts.slice(idx + 1)]);
+    localStorage.setItem("cart", JSON.stringify([...carts.slice(0, idx), cartItem, ...carts.slice(idx + 1)]))
 
   }
 
@@ -84,21 +90,24 @@ const Product = ({ cart, setCart, count, setCount }) => {
 
 
     // found가 있으면 중복된 물건
-    const found = cart.find((el) => el._id === cartItem._id);
+    const found = carts.find((el) => el._id === cartItem._id);
 
     // found.quantity+ count는 기존 db의 수량과 장바구니 클릭을 통해 추가된 수량
     if (found) setQuantity(cartItem._id, found.quantity + object)
     else if (!found) {
-      setCart([...cart, cartItem]);
-      localStorage.setItem("cart", JSON.stringify([...cart, cartItem]))
+      setCarts([...carts, cartItem]);
+      localStorage.setItem("cart", JSON.stringify([...carts, cartItem]))
     }
     //기존 카트는 유지하고 카트 item 추가
 
-    console.log(cart)
   }
 
-  const size = { type: "size", option: ["small", "medium", "large", "xlarge", "xxlarge"] };
-
+  const size = { type: "size", option: ["small", "medium", "large", "xlarge", "xxlarge"], dbOption: ["sizeS", "sizeM", "sizeL", "sizeXL", "size2XL"] };
+  const [sizeData, setSizeData] = useState('');
+  const radioValue = (text) => {
+    setSizeData(text);
+    console.log(sizeData);
+  }
   return (
     product && (
       <>
@@ -117,8 +126,8 @@ const Product = ({ cart, setCart, count, setCount }) => {
               </div>
               <div>
                 <Counter handleQuantity={handleQuantity} object={object} product={product} />
-                <RadioBox options={size} />
-                <Button className="alert alert-primary" role="alert" onClick={() => {
+                <RadioBox options={size} radioProps={radioValue} />
+                <Button onClick={() => {
                   handleCart()
                   alert("상품이 장바구니에 담겼습니다.")
                 }
@@ -127,7 +136,9 @@ const Product = ({ cart, setCart, count, setCount }) => {
                 <LinkStyle to={"/order"} state={{
                   count,
                   total: product.price * object,
-                  product: product.title
+                  product: product.title,
+                  productId: product._id,
+                  productSize: sizeData,
                 }}>구매하기</LinkStyle>
               </div>
 

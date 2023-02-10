@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { LinkStyle, ProductWrapper } from "./styled";
 import queryString from 'query-string';
+import * as API from "../../../utils/api";
 
 const Product = () => {
   const [productList, setProductList] = useState([]);
@@ -21,23 +22,17 @@ const Product = () => {
 
   }, [])
 
-
-
-
-
-
-
   const imgError = (e) => e.target.src = "https://kuku-keke.com/wp-content/uploads/2020/04/2491_6.png";
 
   useEffect(() => {
     (async () => {
       try {
         if(category === 'all') {
-          const response = await axios.get("http://localhost:8001/api/products");
+          const response = await API.get("/products");
           const products = response.data;
           setProductList(products);
         } else {
-          const response = await axios.get(`http://localhost:8001/api/products/category/${category}`);
+          const response = await API.get(`/products/category/${category}`);
           const products = response.data;
           setProductList(products);
         }
