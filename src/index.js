@@ -7,6 +7,7 @@ import reportWebVitals from "./reportWebVitals";
 import { UserProvider } from "./context/UserContext";
 import { OrderProvider } from "./context/OrderContext";
 
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <UserProvider>

@@ -1,36 +1,52 @@
 import axios from 'axios';
-import React, { useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useEffect, useRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { OrderInfo, OrderWrapper, PayInfo } from "./styled";
 import jwt_decode from "jwt-decode";
+import * as API from "../../../utils/api";
 
 const Order = () => {
   const location = useLocation();
-	const {count, total, product} = location.state;
+	const {count, total, product, productId, productSize} = location.state;
   const inputName = useRef();
   const inputPhone = useRef();
   const inputAddress = useRef();
   const inputAddress2 = useRef();
   const inputZipcode = useRef();
-
-  const token = localStorage.getItem("token");
-  const decoded = jwt_decode(token);
-  const { userId } = decoded;
-
-  console.log(inputName);
+  const navigator = useNavigate();
+  let token = localStorage.getItem("token");
 
   const orderHandler = async () => {
     try {
+      const decoded = jwt_decode(token);
+      const { userId } = decoded;
       const data = {
-        "orderNumber": "100000",
         userId,
+        "totalPrice": total + 3000,
         "consignee": inputName.current.value,
-        "address": `(${inputZipcode.current.value}) ${inputAddress.current.value} ${inputAddress2.current.value}`,
+        "address1": inputAddress.current.value,
+        "address2": inputAddress2.current.value,
+        "zipcode": inputZipcode.current.value,
         "phoneNumber": inputPhone.current.value
       }
-      console.log(data);
-      await axios.post("http://localhost:8001/api/order", data);
+
+      const response = await API.post("/order", data);
+      const orderData = response.data;
+      const odData = {
+        "orderId": orderData._id,
+        "productId": productId,
+        "productQuantity": 1,
+        "productSize": productSize,
+        "_id": userId,
+      }
+
+      await API.post("/order/product", odData);
+
+      console.log(odData);
+
+      navigator("/order/complete");
     } catch(err) {
+      console.log(total, product, productId, productSize)
       console.log(err);
     }
   }
@@ -47,15 +63,15 @@ const Order = () => {
             <form>
               <div>
                 <label htmlFor="name">NAME</label>
-                <input type="text" id="name" placeholder="Input your name" ref={inputName} />
+                <input type="text" id="name" placeholder="이름" ref={inputName} />
               </div>
               <div>
                 <label htmlFor="phone">PHONE</label>
-                <input type="text" id="phone" placeholder='Input Phone Number' ref={inputPhone} />
+                <input type="text" id="phone" placeholder='휴대폰 번호' ref={inputPhone} />
               </div>
               <div>
                 <label htmlFor="address">ADDRESS</label>
-                <input type="text" id="address" placeholder='Your Address' ref={inputAddress} />
+                <input type="text" id="address" placeholder='주소' ref={inputAddress} />
               </div>
               <div>
                 <label htmlFor="address2">ADDRESS2</label>
@@ -73,15 +89,15 @@ const Order = () => {
               <ul>
                 <li>
                   주문 상품
-                  <span>{product} 외 {count-1}개</span>
+                  <span> {product}</span>
                 </li>
                 <li>
                   상품 금액
-                  <span>{total}원</span>
+                  <span> {total}원</span>
                 </li>
                 <li>
                   배송비
-                  <span>3000원</span>
+                  <span> 3000원</span>
                 </li>
               </ul>
               <p>총 결제금액 <span>{total + 3000}원</span></p>
