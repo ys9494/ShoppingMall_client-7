@@ -39,7 +39,7 @@ const UserOrderedItem = (item) => {
         <ItemDetail>
           <OrderInfo>
             <span>{item?.createdAt?.slice(0, 10)} </span>
-            <span>({item?.orderNumber})</span>
+            {/* <span>({item?.orderNumber})</span> */}
           </OrderInfo>
 
           <ItemWrapper>
