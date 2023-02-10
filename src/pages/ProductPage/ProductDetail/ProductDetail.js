@@ -64,8 +64,10 @@ const Product = ({ cart, setCart, count, setCount }) => {
       manufacturer: product.manufacturer,
       quantity: quantity,
     };
+
     // 값만 수정된 새로운 배열 리턴
     setCart([...cart.slice(0, idx), cartItem, ...cart.slice(idx + 1)]);
+    localStorage.setItem("cart", JSON.stringify([...cart.slice(0, idx), cartItem, ...cart.slice(idx + 1)]))
 
   }
 
@@ -78,8 +80,6 @@ const Product = ({ cart, setCart, count, setCount }) => {
       price: product.price,
       manufacturer: product.manufacturer,
       quantity: object,
-
-
     };
 
 
@@ -87,9 +87,8 @@ const Product = ({ cart, setCart, count, setCount }) => {
     const found = cart.find((el) => el._id === cartItem._id);
 
     // found.quantity+ count는 기존 db의 수량과 장바구니 클릭을 통해 추가된 수량
-    if (found) setQuantity(cartItem._id, found.quantity + object);
-    else {
-
+    if (found) setQuantity(cartItem._id, found.quantity + object)
+    else if (!found) {
       setCart([...cart, cartItem]);
       localStorage.setItem("cart", JSON.stringify([...cart, cartItem]))
     }

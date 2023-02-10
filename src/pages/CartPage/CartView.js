@@ -1,27 +1,17 @@
 import React from 'react';
-import { useState } from 'react';
-import Counter from '../ProductPage/ProductDetail/Counter';
+import { Button } from 'react-bootstrap';
 
-const itemList = ({ carts, onComplete, onRemove, count, setCount }) => {
+const itemList = ({ carts, setCarts, onComplete, onRemove, setQuantity }) => {
 
-
-  // 제품 수량 카운팅
-  const handleQuantity = (quantity) => {
-    if (quantity === "plus") {
-      setCount(count + 1);
-    } else {
-      if (count === 1) return;
-      setCount(count - 1);
-    }
-  };
 
   return (
     <div>
       <ol>
+
         {carts && carts.map((item, index) => {
           return (
 
-            <li key={item._id} className={item.isCompleted ? 'complete' : ''}>
+            <li key={index} className={item.isCompleted ? 'complete' : ''}>
 
               <img
                 src={item.imageUrl}
@@ -34,23 +24,26 @@ const itemList = ({ carts, onComplete, onRemove, count, setCount }) => {
 
               </div>
 
-              <button
+
+              <span>수량:{item.quantity}</span>
+              <br></br>
+              <Button variant="primary" onClick={() => setQuantity("plus", item._id, item.quantity + 1)}>+</Button>
+              <Button onClick={() => setQuantity("minus", item._id, item.quantity - 1)}>-</Button>
+              <Button
                 type="button"
                 onClick={() => {
                   onRemove(index);
                 }}
               >
                 삭제
-              </button>
-              <button onClick={() => handleQuantity("plus")}>플러스</button>
-              <span>수량: {count}</span>
-              <button onClick={() => handleQuantity("minus")}>마이너스</button>
+              </Button>
             </li>
+
           );
         })}
       </ol>
     </div>
-  );
+  )
 };
 
 export default itemList;
