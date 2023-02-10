@@ -11,9 +11,10 @@ import Signup from "../pages/SignupPage/Signup";
 import CategoryManage from "../pages/AdminPage/CategoryManagePage/CategoryManage";
 import MyAccount from "../pages/MyAccountPage/MyAccount";
 import MyDetails from "../pages/MyAccountPage/MyDetailsPage/MyDetails";
-import OrderHistory from "../pages/MyAccountPage/OrderHistoryPage/OrderHistory";
+import USERORDERHISTORY from "../pages/MyAccountPage/UserOrderHistoryPage/UserOrderHistory";
 import Productlist from "../pages/Productlistpage/Productlist";
 import Admin from "../pages/AdminPage/Admin";
+import UserOrderedDetail from "../pages/MyAccountPage/UserOrderHistoryPage/UserOrderedDetailPage/UserOrderedDetail";
 import Orderlist from "../pages/Orderlistpage/Orderlist";
 import OrderComplete from "../pages/OrderPage/OrderComplete/OrderComplete"; 
 
@@ -34,8 +35,8 @@ export const ROUTE = {
     element: Signup,
   },
   DELETEACCOUNT: {
-    path: "/deleteaccount",
-    link: "/deleteaccount",
+    path: "/account/delete",
+    link: "/account/delete",
     element: DeleteAccount,
   },
   CART: {
@@ -44,13 +45,13 @@ export const ROUTE = {
     element: Cart,
   },
   PRODUCTADD: {
-    path: "/productadd",
-    link: "/productadd",
+    path: "/admin/product/add",
+    link: "/admin/product/add",
     element: Productadd,
   },
   PRODUCTEDIT: {
-    path: "/productedit",
-    link: "/productedit",
+    path: "/admin/product/edit",
+    link: "/admin/product/edit",
     element: Productedit,
   },
   ORDER: {
@@ -79,31 +80,36 @@ export const ROUTE = {
     element: ProductDetail,
   },
   CategoryManage: {
-    path: "/admin/categorymanage",
-    link: "/admin/categorymanage",
+    path: "/admin/category/manage",
+    link: "/admin/category/manage",
     element: CategoryManage,
   },
-  MyAccount: {
+  MYACCOUNT: {
     path: "/myaccount",
     link: "/myaccount",
     element: MyAccount,
   },
-  MyDetails: {
-    path: "/myaccount/mydetails",
-    link: "/myaccount/mydetails",
+  MYDETIALS: {
+    path: "/myaccount/detail",
+    link: "/myaccount/detail",
     element: MyDetails,
   },
-  OrderHistory: {
-    path: "/myaccount/orderhistory",
-    link: "/myaccount/orderhistory",
-    element: OrderHistory,
+  USERORDERHISTORY: {
+    path: "/myaccount/order",
+    link: "/myaccount/order",
+    element: USERORDERHISTORY,
   },
-  Productlist: {
-    path: "/productlist",
-    link: "/productlist",
+  USERORDEREDDETAIL: {
+    path: "/myaccount/order/detail/:orderId",
+    link: "/myaccount/order/detail",
+    element: UserOrderedDetail,
+  },
+  PRODUCTLIST: {
+    path: "/admin/product/list",
+    link: "/admin/product/list",
     element: Productlist,
   },
-  Admin: {
+  ADMIN: {
     path: "/admin",
     link: "/admin",
     element: Admin,

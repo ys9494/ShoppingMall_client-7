@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { OrderInfo, OrderWrapper, PayInfo } from "./styled";
 import jwt_decode from "jwt-decode";
+import * as API from "../../../utils/api";
 
 const Order = () => {
   const location = useLocation();
@@ -29,9 +30,7 @@ const Order = () => {
         "phoneNumber": inputPhone.current.value
       }
 
-      const response = await axios.post("http://localhost:8001/api/order",
-        data, {headers: {Authorization: `Bearer ${token}`}}
-      );
+      const response = await API.post("/order", data);
       const orderData = response.data;
       const odData = {
         "orderId": orderData._id,
@@ -41,13 +40,11 @@ const Order = () => {
         "_id": userId,
       }
 
-      await axios.post("http://localhost:8001/api/order/product",
-        odData, {headers: {Authorization: `Bearer ${token}`}}
-      );
+      await API.post("/order/product", odData);
 
       console.log(odData);
 
-      // navigator("/order/complete");
+      navigator("/order/complete");
     } catch(err) {
       console.log(total, product, productId, productSize)
       console.log(err);

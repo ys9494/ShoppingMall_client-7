@@ -8,43 +8,45 @@ import {
   ProductInfo, LinkStyle
 } from "./productDetail-styled";
 import RadioBox from "./RadioBox";
-import jwt_decode  from 'jwt-decode';
+import * as API from "../../../utils/api"
 
 const Product = ({ cart, setCart, count, setCount }) => {
+
   const { id } = useParams();
-
-  try {
-    const token = localStorage.getItem("token");
-    const decoded = jwt_decode(token);
-    const { userId } = decoded;
-    // valid token format
-  } catch(error) {
-    // invalid token format
-    console.log(error);
-  }
-  
-
+  const [object, setObject] = useState(1)
   const [product, setProduct] = useState({})
-  useEffect(() => {
-    axios.get("http://localhost:8001/api/products/").then((data) => {
-      setProduct(
-        data.data.find((product) => product._id === (id))
-      );
-    });
-  }, [id]);
 
-  // 숫자에 콤마 추가(1,000)
-  const convertPrice = (price) => {
-    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+  const getProductAPI = async () => {
+    try {
+      API.get("/products/").then((data) => {
+        setProduct(
+          data.data.find((product) => product._id == id)
+        )
+      })
+
+    } catch (err) {
+      console.log("Err", err);
+    }
   }
+
+  useEffect(() => {
+    getProductAPI()
+  }, [id])
+
+
 
   // 제품 수량 카운팅
   const handleQuantity = (quantity) => {
     if (quantity === "plus") {
-      setCount(count + 1);
+      setCount(() => {
+        setObject(object + 1)
+      });
     } else {
-      if (count === 1) return;
-      setCount(count - 1);
+      if (object === 1) {
+        return;
+      }
+      setCount(() => { setObject(object - 1) });
     }
   };
 
@@ -62,8 +64,11 @@ const Product = ({ cart, setCart, count, setCount }) => {
       manufacturer: product.manufacturer,
       quantity: quantity,
     };
+
     // 값만 수정된 새로운 배열 리턴
     setCart([...cart.slice(0, idx), cartItem, ...cart.slice(idx + 1)]);
+    localStorage.setItem("cart", JSON.stringify([...cart.slice(0, idx), cartItem, ...cart.slice(idx + 1)]))
+
   }
 
   // cart에 추가
@@ -74,9 +79,7 @@ const Product = ({ cart, setCart, count, setCount }) => {
       title: product.title,
       price: product.price,
       manufacturer: product.manufacturer,
-      quantity: count,
-
-
+      quantity: object,
     };
 
 
@@ -84,8 +87,8 @@ const Product = ({ cart, setCart, count, setCount }) => {
     const found = cart.find((el) => el._id === cartItem._id);
 
     // found.quantity+ count는 기존 db의 수량과 장바구니 클릭을 통해 추가된 수량
-    if (found) setQuantity(cartItem._id, found.quantity + count);
-    else {
+    if (found) setQuantity(cartItem._id, found.quantity + object)
+    else if (!found) {
       setCart([...cart, cartItem]);
       localStorage.setItem("cart", JSON.stringify([...cart, cartItem]))
     }
@@ -113,26 +116,26 @@ const Product = ({ cart, setCart, count, setCount }) => {
             <ProductInfo>
               <div>
                 <p>{product.title}</p>
-                <span>₩{convertPrice(product.price + "")}</span>
+                <span>₩{Number(product.price).toLocaleString("ko-KR")}</span>
               </div>
               <div>
-                <Counter />
+                <Counter handleQuantity={handleQuantity} object={object} product={product} />
                 <RadioBox options={size} radioProps={radioValue} />
-                <Button onClick={() => handleCart()}>쇼핑백 담기</Button>
-                <LinkStyle to="/order" state={{
-                  count, 
-                  total: product.price * count,
+                <Button onClick={() => {
+                  handleCart()
+                  alert("상품이 장바구니에 담겼습니다.")
+                }
+
+                }>쇼핑백 담기</Button>
+                <LinkStyle to={"/order"} state={{
+                  count,
+                  total: product.price * object,
                   product: product.title,
                   productId: product._id,
                   productSize: sizeData,
                 }}>구매하기</LinkStyle>
               </div>
-              <button onClick={() => handleQuantity("plus")}>플러스</button>
-              <br />
-              <span>총 수량 {convertPrice(count)}</span>
-              <br />
-              <span>총 가격 {convertPrice(product.price * count)}</span>
-              <button onClick={() => handleQuantity("minus")}>마이너스</button>
+
               <div>
                 <p>
                   오후 2시 이전 주문 시 오늘출발 / 오늘도착

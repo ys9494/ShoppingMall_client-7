@@ -1,13 +1,15 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { NavContainer, LinkStyle } from "./nav-styled";
+import * as API from "../utils/api";
+
 const Nav = () => {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     (async () => {
       try {
-        const response = await axios.get("http://localhost:8001/api/categories");
+        const response = await API.get("/categories");
         const category = response.data;
         setCategories(category);
       } catch (err) {

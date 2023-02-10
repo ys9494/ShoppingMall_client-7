@@ -3,23 +3,56 @@ import { Link } from 'react-router-dom';
 import { CartWrapper, CartList, PayInfo } from "./styled";
 import CartView from './CartView';
 import jwt_decode from "jwt-decode";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Button } from 'react-bootstrap';
 const Cart = ({ count, setCount }) => {
-
-
-  const token = localStorage.getItem("token");
-  const decoded = jwt_decode(token);
-  const { userId } = decoded;
   const [carts, setCarts] = useState([]);
-  let [price, setPrice] = useState(0);
-  let [total, setTotal] = useState(0);
-
+  const [price, setPrice] = useState(0);
+  const [total, setTotal] = useState(0);
+  const [delivery, setDelivery] = useState(0);
   useEffect(() => {
     setCarts(JSON.parse(localStorage.getItem("cart")));
   }, [])
 
 
+  const setQuantity = (type, id, quantity) => {
+    if (type === "plus") {
+      console.log(quantity)
+      const found = carts.filter((item) => item._id === id)[0];
+      const idx = carts.indexOf(found);
+      const cartItem = {
+        _id: found._id,
+        imageUrl: found.imageUrl,
+        title: found.title,
+        price: found.price,
+        manufacturer: found.manufacturer,
+        quantity: quantity,
+      };
+      setCarts([...carts.slice(0, idx), cartItem, ...carts.slice(idx + 1)]);
+      localStorage.setItem("cart", JSON.stringify([...carts.slice(0, idx), cartItem, ...carts.slice(idx + 1)]))
+    } else {
+      if (quantity === 0) return;
+      const found = carts.filter((item) => item._id === id)[0];
+      const idx = carts.indexOf(found);
+      const cartItem = {
+        _id: found._id,
+        imageUrl: found.imageUrl,
+        title: found.title,
+        price: found.price,
+        manufacturer: found.manufacturer,
+        quantity: quantity,
+      };
+      setCarts([...carts.slice(0, idx), cartItem, ...carts.slice(idx - 1)]);
+      localStorage.setItem("cart", JSON.stringify([...carts.slice(0, idx), cartItem, ...carts.slice(idx + 1)]))
+    }
+
+
+  }
+
+
   // 총 가격
   const getTotalPrice = () => {
+
     return carts.reduce((tot, el) =>
       tot + (el.price * el.quantity)
       , 0)
@@ -36,8 +69,13 @@ const Cart = ({ count, setCount }) => {
 
     carts && setPrice(getTotalPrice());
     carts && setCount(getTotalCount());
-    carts && setTotal(getTotalPrice() + 3500);
+    carts && setTotal(getTotalPrice());
+
   }, [carts])
+
+
+
+
 
   const handleComplete = index => {
     setCarts(current => {
@@ -66,6 +104,20 @@ const Cart = ({ count, setCount }) => {
     });
   };
 
+  function Component({ setDelivery, total, delivery }) {
+    if (total < 200000) {
+      setDelivery(3500)
+      return <p>배송금액: {delivery} 원</p>;
+    } else {
+      setDelivery(0)
+
+      return <p>배송금액: {delivery} 원</p>;
+
+    }
+  }
+
+
+
   return (
     <>
       <CartWrapper>
@@ -78,9 +130,9 @@ const Cart = ({ count, setCount }) => {
         <div>
           <CartList>
             <CartView
+              setQuantity={setQuantity}
               carts={carts}
-              count={count}
-              setCount={setCount}
+              setCarts={setCarts}
               // onComplete={handleComplete}
               onRemove={handleRemove}
             />
@@ -89,18 +141,20 @@ const Cart = ({ count, setCount }) => {
             <div>
               <p>결제정보</p>
               <ul>
-                <li>상품수 {count} </li>
-                <li>상품 금액 {price}</li>
-                <li>배송비 3,000</li>
+                <li>총 상품개수 {Number(count).toLocaleString("ko-KR")} 개 </li>
+                {/* <li>상품 금액 {Number(total).toLocaleString("ko-KR")}</li> */}
+                <Component setDelivery={setDelivery} total={total} delivery={delivery} />
               </ul>
-              <p>총 결제금액{total}</p>
+              <p>총 결제금액 {Number(total + delivery).toLocaleString("ko-KR")} 원</p>
             </div>
-            <button onClick={handleRemoveAll}>쇼핑백 비우기</button>
-            <Link to={`http://localhost:3000/order/${userId}`} state={{
-              total,
-              price,
-              count,
-            }}>주문하기</Link>
+            <button className="btn btn-outline-primary mb-3" onClick={handleRemoveAll}>쇼핑백 비우기</button>
+            <Button className="btn btn-outline-primary mb-3">
+              <Link to="/order" state={{
+                total,
+                price,
+                count,
+              }}>주문하기</Link>
+            </Button>
           </PayInfo>
         </div>
       </CartWrapper>

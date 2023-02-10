@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState, useRef } from 'react';
 import { CategoryWrapper } from "./styled";
+import * as API from "../../../utils/api";
 
 const CategoryManage = () => {
   const [categoryList, setCategoryList] = useState([]);
@@ -13,7 +14,7 @@ const CategoryManage = () => {
   useEffect(() => {
     (async () => {
       try {
-        const response = await axios.get("http://localhost:8001/api/categories");
+        const response = await API.get("/categories");
         const category = response.data;
         setCategoryList(category.map(c => c[0]));
       } catch(err) {
@@ -26,9 +27,8 @@ const CategoryManage = () => {
     e.preventDefault();
     let addValue = addInput.current.value;
     try {
-      const response = await axios.post("http://localhost:8001/api/categories",
-        {title: addValue},
-        {headers: {Authorization: `Bearer ${token}`}}
+      const response = await API.post("/categories",
+        {title: addValue}
       );
       const category = response.data;
       setCategoryList(current => [...current, category]);
@@ -45,9 +45,8 @@ const CategoryManage = () => {
       setFlag(!flag);
     } else {
       try {
-        await axios.patch(`http://localhost:8001/api/categories/${id}`,
+        await API.patch(`/categories/${id}`,
           {title: current[idx].value},
-          {headers: {Authorization: `Bearer ${token}`}}
         );
         current[idx].disabled = true;
         setFlag(!flag);
@@ -65,9 +64,7 @@ const CategoryManage = () => {
   }
   const categoryDeleteHandler = async (id) => {
     try {
-      await axios.delete(`http://localhost:8001/api/categories/${id}`,
-        {headers: {Authorization: `Bearer ${token}`}}
-      );
+      await API.delete(`/categories/${id}`);
       setCategoryList(current => current.filter(category => category._id !== id));
     } catch(err) {
       console.log(err);
@@ -105,7 +102,7 @@ const CategoryManage = () => {
                 categoryList.map((category, idx) => {
                   return (
                     <li key={idx}>
-                      <input type="text" value={value} disabled ref={(e) => (anyInput.current[idx] = e)} onChange={onChange} />
+                      <input type="text" value={category.title} disabled ref={(e) => (anyInput.current[idx] = e)} onChange={onChange} />
                       <button onClick={(e) => {
                         e.preventDefault();
                         categoryUpdateHandler(category._id, idx);

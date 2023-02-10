@@ -3,7 +3,10 @@ import { useCallback } from "react";
 import { SingupWrapper, SignupForm, InvalidMessage, GotoLogin } from "./styled";
 import { InputWrapper, Button } from "../../components/common-styled";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import * as API from "../../utils/api";
+import { useUserDispatch } from "../../context/UserContext";
+import { ROUTE } from "../../routes/route";
 
 /**
  * 유효성검사
@@ -25,6 +28,9 @@ const Signup = () => {
   const nameRef = useRef();
   const emailRef = useRef();
   const pwRef = useRef();
+
+  const navigate = useNavigate();
+  const dispatch = useUserDispatch();
 
   /** 유효성체크 메세지 */
   const InvalidMessages = {
@@ -61,54 +67,41 @@ const Signup = () => {
     }
   }, [password, passwordConfirm]);
 
-  /** 회원가입 */
-  const register = () => {
-    axios
-      .post("http://localhost:8001/api/users/register", {
+  /** 회원가입 API */
+  const signupAPI = async () => {
+    // await post()
+    try {
+      await API.post("/users/register", {
         name,
         email,
         password,
-      })
-      .then((res) => {
-        console.log("jwt", res.data);
-        // localStorage.setItem("token", res.data.token);
-      })
-      .catch((err) => {
-        console.log("Error", err);
       });
+
+      navigate(ROUTE.LOGIN.link);
+    } catch (err) {
+      console.log("Error", err?.response?.data);
+      alert("이미 사용중인 이메일입니다.");
+    }
   };
 
   /** 회원가입 제출 */
-  const signupSubmit = useCallback(
-    (e) => {
-      e.preventDefault();
+  const signupSubmit = (e) => {
+    e.preventDefault();
 
-      if (!isNameValid) {
-        return nameRef.current.focus();
-      }
-      if (!isEmailValid) {
-        return emailRef.current.focus();
-      }
+    if (!isNameValid) {
+      return nameRef.current.focus();
+    }
+    if (!isEmailValid) {
+      return emailRef.current.focus();
+    }
 
-      if (isNameValid && isEmailValid && isPwMatch) {
-        console.log(
-          "회원가입 완료",
-          name,
-          email,
-          password,
-          passwordConfirm,
-          isPwMatch
-        );
-        return register();
-      }
-    },
-    [name, email, password, passwordConfirm]
-  );
-
+    if (isNameValid && isEmailValid && isPwMatch) {
+      signupAPI();
+    }
+  };
   return (
     <SingupWrapper>
       <h1>SIGN UP</h1>
-      {/* <button onClick={register}>test button</button> */}
       <SignupForm onSubmit={signupSubmit}>
         <InputWrapper>
           <label>NAME</label>
