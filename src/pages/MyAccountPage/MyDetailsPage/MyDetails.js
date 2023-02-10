@@ -2,7 +2,9 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ROUTE } from "../../../routes/route";
 import axios from "axios";
-import jwt_decode from "jwt-decode";
+import * as API from "../../../utils/api";
+import { getUserId } from "../../../utils/utils";
+
 import {
   MyDetailsWrapper,
   DetailFormWrapper,
@@ -29,76 +31,62 @@ const MyDetails = () => {
 
   const navigate = useNavigate();
 
-  /** 사용자 정보 불러오기 */
   useEffect(() => {
     if (!localStorage.getItem("token")) {
-      return navigate("/");
+      return navigate(ROUTE.LOGIN.link);
     }
+  }, []);
 
-    const token = localStorage.getItem("token");
-    axios
-      .get("http://localhost:8001/api/users/account", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        // Handle success.
-        console.log("User Data: ", response.data);
-        console.log("user id", response.data._id);
+  const getUserAPI = async () => {
+    try {
+      const { data } = await API.get("/users/account");
+      console.log("get user", data);
 
-        /** 유저 정보 값 불러오기 */
-        setEmail(response.data.email);
-        setName(response.data.name);
-        setAddress1(response.data.address1 ? response.data.address1 : address1);
-        setAddress2(response.data.address2 ? response.data.address2 : address2);
-        setZipCode(response.data.zipCode ? response.data.zipCode : zipCode);
-        setCity(response.data.city ? response.data.city : city);
-        setPhoneNumber(
-          response.data.phoneNumber ? response.data.phoneNumber : phoneNumber
-        );
-      })
-      .catch((error) => {
-        // Handle error.
-        console.log("An error occurred:", error.response);
+      /** 유저 정보 값 */
+      setEmail(data.email);
+      setName(data.name);
+      setAddress1(data.address1 ? data.address1 : address1);
+      setAddress2(data.address2 ? data.address2 : address2);
+      setZipCode(data.zipCode ? data.zipCode : zipCode);
+      setCity(data.city ? data.city : city);
+      setPhoneNumber(data.phoneNumber ? data.phoneNumber : phoneNumber);
+    } catch (err) {
+      console.log("Err", err?.response?.data);
+    }
+  };
+
+  const userEditAPI = async () => {
+    const userId = getUserId();
+
+    try {
+      const { data } = await API.patch(`/users/account/${userId}`, {
+        name,
+        password,
+        currentPassword,
+        address1,
+        address2,
+        zipCode,
+        city,
+        phoneNumber,
       });
+
+      console.log("useredit", data);
+      alert("수정이 완료되었습니다.");
+      navigate("/");
+    } catch (err) {
+      console.log("Err", err?.response?.data);
+    }
+  };
+
+  /** 사용자 정보 불러오기 */
+  useEffect(() => {
+    getUserAPI();
   }, []);
 
   /** 사용자 정보 제출 */
   const userDetailSubmit = (e) => {
     e.preventDefault();
-
-    const token = localStorage.getItem("token");
-    const decoded = jwt_decode(token);
-    const { userId } = decoded;
-
-    axios
-      .patch(
-        `http://localhost:8001/api/users/account/${userId}`,
-        {
-          name,
-          password,
-          currentPassword,
-          address1,
-          address2,
-          zipCode,
-          city,
-          phoneNumber,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-      .then((response) => {
-        // Handle success.
-        console.log("Data: ", response.data);
-      })
-      .catch((error) => {
-        // Handle error.
-        console.log("An error occurred:", error.response);
-      });
+    userEditAPI();
   };
 
   return (

@@ -8,9 +8,7 @@ import { InputWrapper, Button } from "../../components/common-styled";
 import { LayoutWrapper } from "../../components/common-styled";
 import { post } from "../../utils/api";
 
-import { getUserId } from "../../utils/utils";
-
-import { useUserState, useUserDispatch } from "../../context/UserContext";
+import { useUserDispatch } from "../../context/UserContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -22,18 +20,20 @@ const Login = () => {
   const dispatch = useUserDispatch();
 
   /** 로그인 API */
-  const loginAPI = async (data) => {
+  const loginAPI = async (userData) => {
     try {
-      const response = await post("/users/login", data);
-      console.log(response.data);
-      localStorage.setItem("token", response.data.token);
+      const { data } = await post("/users/login", userData);
+      console.log("login", data.isAdmin);
+      localStorage.setItem("token", data.token);
       dispatch({
         type: "LOGIN",
+        isAdmin: data.isAdmin,
       });
-      console.log(getUserId());
+      navigate("/");
     } catch (err) {
-      console.log("Error", err.response);
-      console.log("아이디 또는 비밀번호를 확인해주세요");
+      console.log("Error", err?.response?.data);
+      // navigate("/login");
+      alert("이메일 또는 비밀번호를 확인해주세요");
     }
   };
 
@@ -42,8 +42,6 @@ const Login = () => {
     (e) => {
       e.preventDefault();
       loginAPI({ email, password });
-      navigate("/");
-
       setEmail("");
       setPassword("");
     },

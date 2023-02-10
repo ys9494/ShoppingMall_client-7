@@ -1,4 +1,4 @@
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 export const NavContainer = styled.div`
@@ -10,6 +10,10 @@ export const NavContainer = styled.div`
 
   > ul > li:not(:last-of-type) {
     margin-bottom: 20px;
+  }
+
+  ul li:not(:first-child) {
+    margin-left: 5px;
   }
 
   span {
