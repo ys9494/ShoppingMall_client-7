@@ -6,6 +6,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { UserProvider } from "./context/UserContext";
 
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <UserProvider>
