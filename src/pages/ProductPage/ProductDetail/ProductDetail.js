@@ -102,12 +102,8 @@ const Product = ({ count, setCount }) => {
 
   }
 
-  const size = { type: "size", option: ["small", "medium", "large", "xlarge", "xxlarge"], dbOption: ["sizeS", "sizeM", "sizeL", "sizeXL", "size2XL"] };
-  const [sizeData, setSizeData] = useState('');
-  const radioValue = (text) => {
-    setSizeData(text);
-    console.log(sizeData);
-  }
+  const size = { type: "size", option: ["small", "medium", "large", "xlarge", "xxlarge"] };
+
   return (
     product && (
       <>
