@@ -6,7 +6,7 @@ import jwt_decode from "jwt-decode";
 
 const Order = () => {
   const location = useLocation();
-	const {count, total, product} = location.state;
+	const {count, total, product, productId, productSize} = location.state;
   const inputName = useRef();
   const inputPhone = useRef();
   const inputAddress = useRef();
@@ -29,12 +29,27 @@ const Order = () => {
         "phoneNumber": inputPhone.current.value
       }
 
-      await axios.post("http://localhost:8001/api/order",
+      const response = await axios.post("http://localhost:8001/api/order",
         data, {headers: {Authorization: `Bearer ${token}`}}
       );
+      const orderData = response.data;
+      const odData = {
+        "orderId": orderData._id,
+        "productId": productId,
+        "productQuantity": 1,
+        "productSize": productSize,
+        "_id": userId,
+      }
 
-      navigator("/order/complete");
+      await axios.post("http://localhost:8001/api/order/product",
+        odData, {headers: {Authorization: `Bearer ${token}`}}
+      );
+
+      console.log(odData);
+
+      // navigator("/order/complete");
     } catch(err) {
+      console.log(total, product, productId, productSize)
       console.log(err);
     }
   }
