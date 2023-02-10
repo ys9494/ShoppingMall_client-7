@@ -9,7 +9,7 @@ import {
   OrderInfo,
   ItemInfo,
   OrderStatus,
-} from "./userordereditem-styled";
+} from "./ordereditem-styled";
 
 import * as API from "../../../utils/api";
 
@@ -27,7 +27,8 @@ const UserOrderedItem = (item) => {
         productSize,
         orderId,
       });
-      console.log("item", orderedItem);
+
+      console.log("orderedInfoitem", orderedItem);
     } catch (err) {
       console.log("Err", err?.response?.data);
     }
@@ -75,7 +76,7 @@ const UserOrderedItem = (item) => {
               <OrderStatus>
                 <p>{orderedItem?.status}</p>
                 <Link
-                  to={`/myaccount/order/detail/${item._id}`}
+                  to={`/myaccount/order/detail/${orderedItem._id}`}
                   state={orderedItem}
                 >
                   <span>주문 상세 &gt; </span>
